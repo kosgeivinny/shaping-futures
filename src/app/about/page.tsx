@@ -4,6 +4,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion, useScroll, useTransform } from "framer-motion"; 
+// Assuming '@/lib/teamData' is available and correctly exports teamMembers
 import { teamMembers } from "@/lib/teamData"; 
 
 // --- Theme Variables ---
@@ -11,7 +12,11 @@ const PRIMARY_BLUE = "#2d2f55";
 const ACCENT_YELLOW = "#f2e63d";
 const WHITE = "#ffffff";
 
-// --- Type Definitions (No change) ---
+// --- Framer Motion Component for Link ---
+// This is the cleanest way to apply Framer Motion props like whileHover to Next.js Link.
+const MotionLink = motion(Link);
+
+// --- Type Definitions ---
 interface ValueCardProps {
   icon: string;
   title: string;
@@ -26,7 +31,7 @@ interface TeamMember {
   image: string;
 }
 
-// --- Component for Mission, Vision, Values Cards (No change) ---
+// --- Component for Mission, Vision, Values Cards ---
 const ValueCard = ({ icon, title, text }: ValueCardProps) => (
   <motion.div
     initial={{ opacity: 0, y: 30 }}
@@ -41,7 +46,7 @@ const ValueCard = ({ icon, title, text }: ValueCardProps) => (
   </motion.div>
 );
 
-// --- Component for Standard Team Member Card (No change) ---
+// --- Component for Standard Team Member Card ---
 const TeamCard = ({ member, index }: { member: TeamMember, index: number }) => (
   <motion.div
     key={member.id}
@@ -70,7 +75,7 @@ const TeamCard = ({ member, index }: { member: TeamMember, index: number }) => (
   </motion.div>
 );
 
-// --- Component for Highlighted (CEO/Founder) Team Member Card (No change) ---
+// --- Component for Highlighted (CEO/Founder) Team Member Card ---
 const HighlightedTeamCard = ({ member }: { member: TeamMember }) => (
   <motion.div
     initial={{ opacity: 0, scale: 0.9 }}
@@ -130,27 +135,25 @@ export default function AboutPage() {
     },
   ];
 
+  // Assuming teamMembers has at least one member
   const founder = teamMembers[0];
   const coreTeam = teamMembers.slice(1);
 
   return (
     <main className="bg-[#f3f4f9] text-gray-800">
       
-      {/* 1. HERO SECTION (Parallax FIX) */}
+      {/* 1. HERO SECTION (Parallax) */}
       <motion.section 
         className="relative bg-gradient-to-b from-[#2d2f55] via-[#2d2f55] to-[#1f2041] text-white px-6 text-center overflow-hidden"
-        // *** FIX 1: Removed fixed height and let padding define height ***
       >
         <motion.div 
             style={{ y: yParallax, scale: useTransform(scrollYProgress, [0, 0.5], [1, 1.1]) }} 
-            // *** FIX 2: Ensure background covers the whole section area ***
             className="absolute inset-0 z-0 w-full h-full" 
         >
-          {/* Background image can be added here or simulated with a darker image/texture */}
+          {/* Simulating a dark background/texture */}
           <div className="w-full h-full bg-[#2d2f55] opacity-20"></div>
         </motion.div>
 
-        {/* *** FIX 3: Add the large padding and z-index directly to the content wrapper *** */}
         <div className="relative z-10 py-32"> 
           <motion.h1
             initial={{ opacity: 0, y: -20 }}
@@ -167,7 +170,7 @@ export default function AboutPage() {
         </div>
       </motion.section>
 
-      {/* 2. WHO WE ARE / HISTORY SECTION (No change) */}
+      {/* 2. WHO WE ARE / HISTORY SECTION */}
       <section className="py-20 px-6 max-w-6xl mx-auto">
         <div className="grid md:grid-cols-2 gap-12 items-center">
             <motion.div 
@@ -194,7 +197,7 @@ export default function AboutPage() {
                 transition={{ duration: 0.7 }}
             >
                 <h2 className="text-4xl font-bold text-[#2d2f55] mb-6">
-                    Building Brighter Futures, One Step at a Time
+                    Building Brighter Futures, <span style={{ color: ACCENT_YELLOW }}>One Step at a Time</span>
                 </h2>
                 <p className="text-gray-700 leading-relaxed text-lg mb-4">
                     Welcome! We are dedicated to making a positive impact in the community through various programs, with a primary focus on dance. Our goal is to provide <strong>support and opportunities for children in need,</strong> helping them develop their skills and talents while fostering a sense of community and belonging.
@@ -206,7 +209,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* 3. MISSION, VISION, VALUES (No change) */}
+      {/* 3. MISSION, VISION, VALUES */}
       <section className="bg-[#2d2f55] text-white py-20 px-6">
         <h2 className="text-4xl font-bold text-center mb-12" style={{ color: ACCENT_YELLOW }}>
             Our Core Pillars
@@ -218,7 +221,7 @@ export default function AboutPage() {
         </div>
       </section>
       
-      {/* 4. TEAM SECTION - Full Display (No change) */}
+      {/* 4. TEAM SECTION - Full Display */}
       <section className="py-20 px-6 bg-[#f3f4f9]">
         <h2 className="text-4xl font-extrabold text-center text-[#2d2f55] mb-4">
           Meet The Entire Dedicated Team
@@ -238,7 +241,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* 5. FINAL CTA SECTION (ACCENT COLOR) (No change) */}
+      {/* 5. FINAL CTA SECTION (ACCENT COLOR) */}
       <section className="text-center py-20 text-black" style={{ backgroundColor: ACCENT_YELLOW }}>
         <div className="max-w-3xl mx-auto px-6">
           <p className="text-2xl font-semibold leading-relaxed mb-8" style={{ color: PRIMARY_BLUE }}>
@@ -250,14 +253,22 @@ export default function AboutPage() {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, type: 'spring' }}
-            whileHover={{ scale: 1.05, boxShadow: "0 10px 15px rgba(0, 0, 0, 0.1)" }}
           >
-            <Link
+            {/* FIX: Using MotionLink (motion(Link)) to handle animation and routing smoothly */}
+            <MotionLink 
+              whileHover={{ 
+                scale: 1.05, 
+                boxShadow: "0 10px 20px rgba(0, 0, 0, 0.25)", 
+                backgroundColor: "#1f2041" // Darker blue on hover
+              }}
+              transition={{ duration: 0.2 }}
+              
               href="/get-involved/donation"
-              className="inline-block bg-[#2d2f55] text-white font-extrabold px-10 py-4 rounded-lg shadow-xl hover:bg-[#1f2041] transition-colors text-lg uppercase tracking-wider transform"
+              className="inline-block text-white font-extrabold px-10 py-4 rounded-lg shadow-xl text-lg uppercase tracking-wider transform"
+              style={{ backgroundColor: PRIMARY_BLUE }} 
             >
               Support Our Work Today
-            </Link>
+            </MotionLink>
           </motion.div>
         </div>
       </section>

@@ -2,7 +2,112 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { JSX } from "react";
 
+// --- Theme Variables ---
+const PRIMARY_BLUE = "#2d2f55";
+const ACCENT_YELLOW = "#f2e63d";
+const LIGHT_BACKGROUND = "#f3f4f9";
+
+// --- Data Structure Definitions ---
+// Define the common structure for a story item
+interface StoryItem {
+  title: string;
+  image: string;
+  text: string | JSX.Element;
+}
+
+const stories: StoryItem[] = [
+  {
+    title: "Mike’s Journey: From Aspiring Dancer to Fierce Competitor",
+    image: "/images/brian.jpg",
+    text: `Mike, a dedicated dancer from the Shaping Futures program, is making waves in the battle scene. Through mentorship and rigorous training, he transformed his raw talent into a refined craft and now competes on major stages.`,
+  },
+  {
+    title: "Dominic’s Success: From Learner to Tech Innovator",
+    image: "/images/dominic.jpeg",
+    text: `Dominic, the first beneficiary of the Mtoto na Elimu program, gained quality education and mentorship through Shaping Futures. His hard work and innovation have led him to international recognition, inspiring many.`,
+  },
+  {
+    title: "National Diversity Awards UK Nomination",
+    image: "/images/awards.jpg",
+    text: (
+      <>
+        September 2025 – Shaping Futures founder, Kevin Odhiambo was nominated for the Positive Role Model Award at the National Diversity Awards UK.{" "}
+        <a
+          target="_blank"
+          href="https://www.nationaldiversityawards.co.uk/awards-2025/nominations/kevin-odhiambo-ochieng/"
+          className={`text-[${ACCENT_YELLOW}] hover:text-white underline font-semibold transition`}
+        >
+          Read more
+        </a>
+      </>
+    ),
+  },
+  {
+    title: "Meet Kevin Odhiambo: The Visionary Behind Shaping Futures",
+    image: "/images/founder.jpeg",
+    text: `Nominated for Founder of the Year Award (FOYA) 2023, Kevin’s dedication continues to empower the youth through mentorship and opportunity.`,
+  },
+  {
+    title: "Shaping Futures: A Dance Crew Making Waves",
+    image: "/images/shapingkibra.jpeg",
+    text: `🏆 Awarded Best Dance Crew of the Year at the 8Town Kibra Awards, Shaping Futures continues to inspire through passion, discipline, and creativity.`,
+  },
+  {
+    title: "Spreading Warmth, Restoring Dignity",
+    image: "/images/clothingstory.jpeg",
+    text: `Over 5,000 lives touched through our Clothes Donation Program — restoring dignity and hope to vulnerable communities.`,
+  },
+  {
+    title: "Nourishing Lives, Spreading Hope",
+    image: "/images/feedingstory.jpeg",
+    text: `Our Feeding Program ensures children receive nutritious meals and emotional support — proving that small acts of kindness create lasting impact.`,
+  },
+];
+
+// --- Type Definition for Story Card Props (now correctly typed) ---
+interface StoryCardProps {
+  story: StoryItem;
+  i: number;
+  aspectRatio?: string;
+  objectPosition?: string;
+}
+
+// --- Utility Component for Reusable Story Card ---
+// This must be defined outside or inside the main component to reference StoryItem
+const StoryCard = ({ story, i, aspectRatio = "aspect-square", objectPosition = "object-top" }: StoryCardProps) => (
+  <motion.div
+    key={i}
+    initial={{ opacity: 0, scale: 0.9 }}
+    whileInView={{ opacity: 1, scale: 1 }}
+    viewport={{ once: true, amount: 0.1 }}
+    transition={{ duration: 0.5, delay: i * 0.1 }}
+    className="bg-[#353769] rounded-xl shadow-2xl overflow-hidden flex flex-col h-full"
+  >
+    <div className={`relative w-full ${aspectRatio}`}>
+      <Image
+        src={story.image}
+        alt={story.title}
+        fill
+        sizes="(max-width: 640px) 100vw, 33vw"
+        className={`object-cover hover:scale-105 transition-transform duration-500 ${objectPosition}`}
+      />
+      <div className="absolute inset-0 bg-black/30"></div>
+    </div>
+    <div className="p-6 flex flex-col justify-between flex-grow">
+      <h3 className={`text-xl font-extrabold text-[${ACCENT_YELLOW}] mb-3`}>
+        {story.title}
+      </h3>
+      <p className="text-gray-300 leading-relaxed text-sm">
+        {story.text}
+      </p>
+    </div>
+  </motion.div>
+);
+
+
+// --- Main Component ---
 export default function ProgramsPage() {
   const programs = [
     {
@@ -49,65 +154,43 @@ export default function ProgramsPage() {
     },
   ];
 
-  const stories = [
-    {
-      title: "Mike’s Journey: From Aspiring Dancer to Fierce Competitor",
-      image: "/images/brian.jpg",
-      text: `Mike, a dedicated dancer from the Shaping Futures program, is making waves in the battle scene. Through mentorship and rigorous training, he transformed his raw talent into a refined craft and now competes on major stages.`,
-    },
-    {
-      title: "Dominic’s Success: From Learner to Tech Innovator",
-      image: "/images/dominic.jpeg",
-      text: `Dominic, the first beneficiary of the Mtoto na Elimu program, gained quality education and mentorship through Shaping Futures. His hard work and innovation have led him to international recognition, inspiring many.`,
-    },
-    {
-      title: "Shaping Futures: A Dance Crew Making Waves",
-      image: "/images/shapingkibra.jpeg",
-      text: `🏆 Awarded Best Dance Crew of the Year at the 8Town Kibra Awards, Shaping Futures continues to inspire through passion, discipline, and creativity.`,
-    },
-    {
-      title: "Meet Kevin Odhiambo: The Visionary Behind Shaping Futures",
-      image: "/images/founder.jpeg",
-      text: `Nominated for Founder of the Year Award (FOYA) 2023, Kevin’s dedication continues to empower the youth through mentorship and opportunity.`,
-    },
-    {
-      title: "Spreading Warmth, Restoring Dignity",
-      image: "/images/clothingstory.jpeg",
-      text: `Over 5,000 lives touched through our Clothes Donation Program — restoring dignity and hope to vulnerable communities.`,
-    },
-    {
-      title: "Nourishing Lives, Spreading Hope",
-      image: "/images/feedingstory.jpeg",
-      text: `Our Feeding Program ensures children receive nutritious meals and emotional support — proving that small acts of kindness create lasting impact.`,
-    },
-  ];
+  // Split the stories into two groups for distinct layouts
+  const portraitStories = stories.slice(0, 5);
+  const landscapeStories = stories.slice(5);
 
   return (
-    <main className="bg-[#f3f4f9] text-gray-800">
-      {/* HERO */}
-      <section className="relative bg-gradient-to-b from-[#2d2f55] via-[#2d2f55] to-[#1f2041] text-white py-24 px-6 text-center overflow-hidden">
+    <main className={`bg-[${LIGHT_BACKGROUND}] text-gray-800`}>
+      
+      {/* 1. HERO SECTION */}
+      <section 
+        className={`relative bg-[${PRIMARY_BLUE}] text-white py-24 px-6 text-center overflow-hidden`}
+        style={{ backgroundImage: `linear-gradient(180deg, ${PRIMARY_BLUE}, #1f2041)` }}
+      >
         <div className="relative z-10">
           <motion.h1
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-4xl md:text-5xl font-extrabold tracking-wide mb-4"
+            className="text-4xl md:text-6xl font-extrabold tracking-wide mb-4"
           >
-            Our <span className="text-[#f2e63d]">Programs</span>
+            Our <span className={`text-[${ACCENT_YELLOW}]`}>Programs</span>
           </motion.h1>
-          <p className="max-w-3xl mx-auto text-lg text-gray-200 leading-relaxed">
+          <p className="max-w-3xl mx-auto text-xl text-gray-200 leading-relaxed">
             Empowering children and transforming communities through impactful
             initiatives in dance, education, feeding, and more.
           </p>
         </div>
-        <div className="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-[#f3f4f9] to-transparent"></div>
+        {/* Aesthetic diagonal divider */}
+        <svg className="absolute bottom-0 left-0 w-full h-auto text-[#f3f4f9]" viewBox="0 0 100 10" preserveAspectRatio="none">
+            <polygon fill="currentColor" points="0,10 100,10 100,0"/>
+        </svg>
       </section>
 
-      {/* PROGRAM GRID */}
-      <section className="py-20 px-6 max-w-6xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-[#2d2f55] mb-4">
-            Our Key <span className="text-[#f2e63d]">Initiatives</span>
+      {/* 2. PROGRAM GRID */}
+      <section className={`py-16 px-6 max-w-7xl mx-auto bg-[${LIGHT_BACKGROUND}]`}>
+        <div className="text-center mb-16">
+          <h2 className={`text-4xl font-extrabold text-[${PRIMARY_BLUE}] mb-4`}>
+            Our Key <span className={`text-[${ACCENT_YELLOW}]`}>Initiatives</span>
           </h2>
           <p className="max-w-3xl mx-auto text-gray-700 leading-relaxed text-lg">
             We are committed to creating a lasting impact through programs that
@@ -119,26 +202,30 @@ export default function ProgramsPage() {
           {programs.map((prog, index) => (
             <motion.div
               key={index}
-              whileHover={{ scale: 1.04 }}
-              transition={{ type: "spring", stiffness: 200 }}
-              className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all border border-transparent hover:border-[#f2e63d]/30"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              whileHover={{ scale: 1.05, boxShadow: "0 10px 30px rgba(0, 0, 0, 0.1)" }}
+              className="bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer transition-all border-b-4 border-transparent hover:border-[#f2e63d]"
             >
-              <div className="relative w-full h-56">
+              <div className="relative w-full aspect-[16/9]">
                 <Image
                   src={prog.image}
                   alt={prog.title}
                   fill
-                  className="object-cover"
+                  sizes="(max-width: 640px) 100vw, 33vw"
+                  className="object-cover transition-transform duration-500 hover:scale-105"
                 />
               </div>
               <div className="p-6 text-center">
-                <h3 className="text-xl font-semibold text-[#2d2f55] mb-2">
+                <h3 className={`text-2xl font-extrabold text-[${PRIMARY_BLUE}] mb-2`}>
                   {prog.title}
                 </h3>
                 <p className="text-gray-600 mb-4">{prog.description}</p>
                 <a
                   href={prog.link}
-                  className="inline-block bg-[#2d2f55] text-white px-4 py-2 rounded-lg hover:bg-[#f2e63d] hover:text-[#2d2f55] transition font-semibold"
+                  className={`inline-block bg-[${PRIMARY_BLUE}] text-white px-6 py-2 rounded-full hover:bg-[${ACCENT_YELLOW}] hover:text-[${PRIMARY_BLUE}] transition font-semibold text-base shadow-md`}
                 >
                   Learn More
                 </a>
@@ -148,67 +235,65 @@ export default function ProgramsPage() {
         </div>
       </section>
 
-      {/* SUCCESS STORIES */}
-      <section className="bg-gradient-to-b from-[#2d2f55] to-[#24264a] text-white py-20 px-6">
-        <div className="max-w-6xl mx-auto text-center mb-12">
-          <h2 className="text-3xl font-bold mb-4">
-            Success <span className="text-[#f2e63d]">Stories</span>
+      {/* 3. SUCCESS STORIES - OPTIMIZED GRID */}
+      <section className={`bg-[${PRIMARY_BLUE}] text-white py-16 px-6`}>
+        <div className="max-w-7xl mx-auto text-center mb-16">
+          <h2 className={`text-4xl font-extrabold mb-4 text-[${ACCENT_YELLOW}]`}>
+            Success Stories
           </h2>
-          <p className="text-gray-300 max-w-3xl mx-auto text-lg">
+          <p className="text-gray-300 max-w-4xl mx-auto text-xl">
             Real stories of transformation from children and youth whose lives
             have been touched by our programs.
           </p>
         </div>
 
-        <div className="space-y-16">
-          {stories.map((story, i) => (
-            <motion.div
-              key={i}
-              whileInView={{ opacity: 1, y: 0 }}
-              initial={{ opacity: 0, y: 50 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-              className={`flex flex-col md:flex-row items-center gap-8 ${
-                i % 2 === 0 ? "" : "md:flex-row-reverse"
-              }`}
-            >
-              <div className="relative w-full md:w-1/2 h-72 rounded-2xl overflow-hidden shadow-lg">
-                <Image
-                  src={story.image}
-                  alt={story.title}
-                  fill
-                  className="object-cover"
-                />
-              </div>
-              <div className="md:w-1/2">
-                <h3 className="text-2xl font-semibold text-[#f2e63d] mb-3">
-                  {story.title}
-                </h3>
-                <p className="text-gray-300 leading-relaxed">{story.text}</p>
-              </div>
-            </motion.div>
+        {/* --- First Five Stories (Portrait/Square Layout with Adjusted Focus) --- */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto mb-12">
+          {portraitStories.map((story, i) => (
+            <StoryCard 
+              key={`portrait-${i}`} 
+              story={story} 
+              i={i} 
+              aspectRatio="aspect-square" 
+              // Custom focus to show the subject lower in the image area
+              objectPosition="object-[50%_30%]" 
+            />
+          ))}
+        </div>
+        
+        {/* --- Last Two Stories (Landscape Layout) --- */}
+        <div className="grid md:grid-cols-2 gap-8 max-w-7xl mx-auto">
+          {landscapeStories.map((story, i) => (
+            <StoryCard 
+              key={`landscape-${i}`} 
+              story={story} 
+              i={i} 
+              aspectRatio="aspect-video" 
+              // Standard center focus for landscape images
+              objectPosition="object-center" 
+            /> 
           ))}
         </div>
       </section>
 
-      {/* CALL TO ACTION */}
-      <section className="py-20 text-center bg-[#f3f4f9]">
-        <h2 className="text-3xl font-bold text-[#2d2f55] mb-4">
-          Make a <span className="text-[#f2e63d]">Difference</span> Today!
+      {/* 4. CALL TO ACTION */}
+      <section className={`py-20 text-center bg-[${LIGHT_BACKGROUND}]`}>
+        <h2 className={`text-4xl font-extrabold text-[${PRIMARY_BLUE}] mb-4`}>
+          Make a <span className={`text-[${ACCENT_YELLOW}]`}>Difference</span> Today!
         </h2>
-        <p className="text-gray-700 max-w-2xl mx-auto mb-8">
+        <p className="text-gray-700 max-w-2xl mx-auto mb-8 text-xl">
           Join us in transforming lives — volunteer, donate, or spread the word.
         </p>
-        <div className="flex justify-center gap-4">
+        <div className="flex justify-center gap-6">
           <a
             href="/get-involved/volunteer"
-            className="bg-[#2d2f55] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#f2e63d] hover:text-[#2d2f55] transition"
+            className={`bg-[${PRIMARY_BLUE}] text-white px-8 py-3 rounded-full font-bold hover:bg-[#1f2041] transition shadow-lg`}
           >
-            Volunteer
+            Become a Volunteer
           </a>
           <a
             href="/get-involved/donation"
-            className="bg-[#f2e63d] text-[#2d2f55] px-6 py-3 rounded-lg font-semibold hover:bg-[#2d2f55] hover:text-[#f2e63d] transition"
+            className={`bg-[${ACCENT_YELLOW}] text-[${PRIMARY_BLUE}] px-8 py-3 rounded-full font-bold hover:shadow-xl transition transform hover:scale-[1.05]`}
           >
             Donate Now
           </a>

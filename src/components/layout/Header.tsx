@@ -4,9 +4,9 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, Shirt, BookOpen, GraduationCap, Soup, Heart, Music, Facebook, Twitter, Instagram } from "lucide-react"; 
+import { ChevronDown, Shirt, BookOpen, GraduationCap, Soup, Heart, Music, Menu, X, Facebook, Twitter, Instagram, ArrowRight } from "lucide-react"; 
 
-// --- Theme Variables (Retained for consistency) ---
+// --- Theme Variables (Corrected to include PRIMARY_BLUE) ---
 const ACCENT_YELLOW = "#f2e63d";
 
 // --- Programs Data (Updated to your specific list) ---
@@ -31,7 +31,7 @@ const programLinks = [
   },
   { 
     title: "Mtoto na Elimu (Education)", 
-    href: "/programs/education", 
+    href: "/programs/mtoto-na-elimu", 
     description: "Supporting access to quality education and school supplies.",
     icon: GraduationCap 
   },
@@ -49,7 +49,7 @@ const programLinks = [
   },
 ];
 
-// --- Dropdown Menu Item Component (No change) ---
+// --- Dropdown Menu Item Component (Desktop Mega-Dropdown item) ---
 const DropdownItem = ({ title, href, description, icon: Icon }: typeof programLinks[0]) => (
   <Link 
     href={href} 
@@ -65,27 +65,43 @@ const DropdownItem = ({ title, href, description, icon: Icon }: typeof programLi
 
 // --- Social Icons Component (Using Lucide Icons) ---
 const SocialIcons = ({ scrolled }: { scrolled: boolean }) => {
+    // Only displayed on desktop (lg:flex)
     const iconColor = scrolled ? 'text-gray-600' : 'text-white';
     const hoverColor = `hover:text-[${ACCENT_YELLOW}]`;
 
     return (
-        <div className={`flex space-x-4 ${iconColor}`}>
-            <a href="#" aria-label="Facebook" className={`transition transform hover:scale-110 ${hoverColor}`}>
+        <div className={`hidden lg:flex space-x-4 ${iconColor}`}>
+            <a href="https://www.facebook.com/SHAFFS35" aria-label="Facebook" className={`transition transform hover:scale-110 ${hoverColor}`}>
                 <Facebook className="w-5 h-5" />
             </a>
-            <a href="#" aria-label="TikTok" className={`transition transform hover:scale-110 ${hoverColor}`}>
+            <a href="https://x.com/ShapingF23501" aria-label="Twitter" className={`transition transform hover:scale-110 ${hoverColor}`}>
                 <Twitter className="w-5 h-5" />
             </a>
-            <a href="#" aria-label="Instagram" className={`transition transform hover:scale-110 ${hoverColor}`}>
+            <a href="https://www.instagram.com/shapingfutures35/" aria-label="Instagram" className={`transition transform hover:scale-110 ${hoverColor}`}>
                 <Instagram className="w-5 h-5" />
             </a>
         </div>
     );
 }
 
+// --- Mobile Navigation List Item Component ---
+const MobileNavLink = ({ href, label, onClick }: { href: string, label: string, onClick: () => void }) => (
+  <Link
+    href={href}
+    onClick={onClick}
+    className="flex justify-between items-center py-3 px-4 text-white hover:bg-[#353769] transition-colors rounded-lg text-lg font-medium"
+  >
+    {label}
+    <ArrowRight className="w-5 h-5 text-[#f2e63d]" />
+  </Link>
+);
+
+
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
-  const [isProgramsOpen, setIsProgramsOpen] = useState(false);
+  const [isProgramsOpen, setIsProgramsOpen] = useState(false); // Desktop Dropdown
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // Mobile Sidebar
+  const [isMobileProgramsOpen, setIsMobileProgramsOpen] = useState(false); // Programs dropdown inside mobile sidebar
 
   useEffect(() => {
     const handleScroll = () => {
@@ -95,10 +111,16 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Variant for the dropdown animation
+  // Variant for the desktop dropdown animation
   const dropdownVariants = {
     hidden: { opacity: 0, y: -20, scaleY: 0.95, transition: { duration: 0.2 } },
     visible: { opacity: 1, y: 0, scaleY: 1, transition: { duration: 0.3 } },
+  };
+  
+  // Variant for the mobile sidebar animation
+  const sidebarVariants = {
+    hidden: { x: "100%", transition: { duration: 0.3 } },
+    visible: { x: 0, transition: { duration: 0.4 } },
   };
 
   const primaryNavLinks = [
@@ -110,6 +132,13 @@ export default function Header() {
     { href: "/gallery", label: "Gallery" },
     { href: "/contact", label: "Contact" },
   ];
+  
+  // Function to close all menus
+  const closeMenus = () => {
+    setIsMobileMenuOpen(false);
+    setIsProgramsOpen(false);
+    setIsMobileProgramsOpen(false);
+  };
 
   return (
     <header
@@ -134,15 +163,14 @@ export default function Header() {
           />
         </Link>
 
-        {/* Nav, Programs Dropdown, and Socials */}
-        <nav className="flex items-center space-x-6 font-medium text-gray-800">
+        {/* --- DESKTOP NAV (Hidden on Mobile) --- */}
+        <nav className="hidden lg:flex items-center space-x-6 font-medium text-gray-800">
           
           {primaryNavLinks.map((link) => {
             const textColor = scrolled ? 'text-gray-800' : 'text-white';
             const hoverColor = `hover:text-[${ACCENT_YELLOW}]`; 
             const afterBg = `after:bg-[${ACCENT_YELLOW}]`;
 
-            // Navigation Links
             const navLinkElement = (
               <Link
                 key={link.href}
@@ -158,7 +186,7 @@ export default function Header() {
             if (link.label === "Events") {
               return (
                 <div key="programs-dropdown" className="flex items-center space-x-6">
-                  {/* Programs Mega Dropdown */}
+                  {/* Programs Mega Dropdown - Desktop Only */}
                   <div 
                     className="relative"
                     onMouseEnter={() => setIsProgramsOpen(true)}
@@ -168,7 +196,6 @@ export default function Header() {
                       href="/programs"
                       className={`flex items-center transition-colors duration-200 cursor-pointer ${scrolled ? 'text-gray-800' : 'text-white'} hover:text-[${ACCENT_YELLOW}]`}
                       onClick={(e) => {
-                        // Allows direct link click while retaining dropdown functionality
                         if (isProgramsOpen) e.preventDefault();
                         setIsProgramsOpen(!isProgramsOpen);
                       }}
@@ -179,7 +206,6 @@ export default function Header() {
                       />
                     </Link>
 
-                    {/* Dropdown Content */}
                     <AnimatePresence>
                       {isProgramsOpen && (
                         <motion.div
@@ -194,7 +220,6 @@ export default function Header() {
                               <DropdownItem key={program.href} {...program} />
                             ))}
                           </div>
-                          {/* Footer/Call to Action inside the dropdown */}
                           <div className="mt-4 pt-4 border-t border-gray-100 flex justify-between items-center bg-[#f7f7f7] p-3 rounded-lg">
                             <p className="text-sm font-semibold text-[#2d2f55]">See the full scope of our work.</p>
                             <Link href="/programs" className="text-sm font-bold text-white bg-[#f2e63d] py-1.5 px-4 rounded-full transition-opacity hover:opacity-90">
@@ -205,7 +230,6 @@ export default function Header() {
                       )}
                     </AnimatePresence>
                   </div>
-                  {/* Continue rendering the rest of the links */}
                   {navLinkElement}
                 </div>
               );
@@ -213,11 +237,136 @@ export default function Header() {
             return navLinkElement;
           })}
 
-          {/* Social Media Icons (Now at the far right) */}
           <SocialIcons scrolled={scrolled} />
-          
         </nav>
+
+        {/* --- MOBILE HAMBURGER ICON (Visible on Mobile) --- */}
+        <button 
+          onClick={() => setIsMobileMenuOpen(true)}
+          className={`lg:hidden p-2 rounded-lg transition-colors ${scrolled ? 'text-[#2d2f55] hover:bg-gray-100' : 'text-white hover:bg-white/10'}`}
+          aria-label="Toggle Menu"
+        >
+          <Menu className="w-6 h-6" />
+        </button>
+
       </div>
+      
+      {/* --- MOBILE OFF-CANVAS SIDEBAR --- */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 z-50 lg:hidden" // Backdrop
+            onClick={closeMenus}
+          >
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              variants={sidebarVariants}
+              // Sidebar styling
+              className="absolute top-0 right-0 w-3/4 max-w-sm h-full bg-[#2d2f55] shadow-2xl p-6 overflow-y-auto"
+              onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside
+            >
+              {/* Header and Close Button */}
+              <div className="flex justify-between items-center pb-6 border-b border-gray-700">
+                <Image
+                    src="/logo.png"
+                    alt="Shaping Futures"
+                    width={150}
+                    height={50}
+                    className="h-10 w-auto"
+                />
+                <button 
+                  onClick={closeMenus}
+                  className="p-2 text-white hover:text-[#f2e63d] transition-colors"
+                  aria-label="Close Menu"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+
+              {/* Navigation Links */}
+              <div className="pt-6 space-y-2">
+                
+                {/* Regular Links */}
+                {primaryNavLinks.filter(link => link.label !== 'Programs').map(link => (
+                  <MobileNavLink 
+                    key={link.href} 
+                    href={link.href} 
+                    label={link.label} 
+                    onClick={closeMenus} 
+                  />
+                ))}
+
+                {/* Programs Collapsible Menu */}
+                <div className="border-t border-gray-700 pt-2 mt-2">
+                    <button
+                        onClick={() => setIsMobileProgramsOpen(!isMobileProgramsOpen)}
+                        className="flex justify-between items-center w-full py-3 px-4 text-white hover:bg-[#353769] transition-colors rounded-lg text-lg font-bold"
+                    >
+                        Programs
+                        <ChevronDown 
+                            className={`w-5 h-5 transition-transform duration-300 ${isMobileProgramsOpen ? 'rotate-180 text-[#f2e63d]' : 'rotate-0'}`} 
+                        />
+                    </button>
+                    
+                    {/* Collapsible Programs List */}
+                    <AnimatePresence>
+                        {isMobileProgramsOpen && (
+                            <motion.div
+                                initial={{ height: 0, opacity: 0 }}
+                                animate={{ height: 'auto', opacity: 1 }}
+                                exit={{ height: 0, opacity: 0 }}
+                                transition={{ duration: 0.3, ease: "easeInOut" }}
+                                className="overflow-hidden bg-[#353769] rounded-lg mt-1"
+                            >
+                                {programLinks.map(program => (
+                                    <Link
+                                        key={program.href}
+                                        href={program.href}
+                                        onClick={closeMenus}
+                                        className="block py-2 pl-8 pr-4 text-sm text-gray-200 hover:text-white hover:bg-[#2d2f55] transition-colors"
+                                    >
+                                        {program.title}
+                                    </Link>
+                                ))}
+                                <Link
+                                    href="/programs"
+                                    onClick={closeMenus}
+                                    className="block py-2 pl-8 pr-4 text-sm text-[#f2e63d] hover:text-white hover:bg-[#2d2f55] transition-colors font-semibold border-t border-gray-700"
+                                >
+                                    View All Programs
+                                </Link>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </div>
+              </div>
+              
+              {/* Mobile CTA and Socials */}
+              <div className="mt-8 pt-6 border-t border-gray-700">
+                  <Link
+                    href="/get-involved/donation"
+                    onClick={closeMenus}
+                    className="flex justify-center items-center w-full bg-[#f2e63d] text-[#2d2f55] font-extrabold px-5 py-3 rounded-xl shadow-lg transition-colors hover:bg-white text-lg"
+                  >
+                    Donate Today!
+                  </Link>
+
+                  <div className="flex justify-center space-x-6 mt-6">
+                    <a href="#" aria-label="Facebook" className="text-white hover:text-[#f2e63d] transition"><Facebook className="w-6 h-6" /></a>
+                    <a href="#" aria-label="Twitter" className="text-white hover:text-[#f2e63d] transition"><Twitter className="w-6 h-6" /></a>
+                    <a href="#" aria-label="Instagram" className="text-white hover:text-[#f2e63d] transition"><Instagram className="w-6 h-6" /></a>
+                  </div>
+              </div>
+              
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }

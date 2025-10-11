@@ -3,7 +3,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
+// Removed AnimatePresence from the import list since it's no longer used for the main grid
+import { motion } from "framer-motion"; 
 import { useEffect, useRef, useState } from "react";
 import { PlayCircle } from "lucide-react"; 
 
@@ -54,22 +55,27 @@ const allPlaceholderPhotos: PhotoItem[] = [
 ];
 
 const videoMedia: VideoItem[] = [
-  { id: 'v1', type: 'video', category: 'video', src: '/videos/video1.mp4', title: 'Dance Performance Highlights', description: '' },
-  { id: 'v2', type: 'video', category: 'video', src: '/videos/video2.mp4', title: 'Community Outreach Day', description: '' },
-  { id: 'v3', type: 'video', category: 'video', src: '/videos/video3.mp4', title: 'Life Skills Workshop Recap', description: '' },
-  { id: 'v4', type: 'video', category: 'video', src: '/videos/video4.mp4', title: 'Volunteer Impact Story', description: '' },
-  { id: 'v5', type: 'video', category: 'video', src: '/videos/video5.mp4', title: 'Behind the Scenes', description: '' },
+  { id: 'v1', type: 'video', category: 'video', src: '/videos/video1.mp4', title: 'Dance Performance Highlights', description: 'Energetic dance class routine.' }, // Added short description
+  { id: 'v2', type: 'video', category: 'video', src: '/videos/video2.mp4', title: 'Community Outreach Day', description: 'Volunteers and students at a community event.' }, // Added short description
+  { id: 'v3', type: 'video', category: 'video', src: '/videos/video3.mp4', title: 'Life Skills Workshop Recap', description: 'Interactive session on mentorship.' }, // Added short description
+  { id: 'v4', type: 'video', category: 'video', src: '/videos/video4.mp4', title: 'Volunteer Impact Story', description: 'A brief look at a success story.' }, // Added short description
+  { id: 'v5', type: 'video', category: 'video', src: '/videos/video5.mp4', title: 'Behind the Scenes', description: 'Candid moments of fun and learning.' }, // Added short description
 ];
 
 const landscapePhotos = allPlaceholderPhotos.filter(item => item.category === 'landscape');
 const portraitPhotos = allPlaceholderPhotos.filter(item => item.category === 'portrait');
 
 export default function GalleryPage() {
-  // start with first video id so it auto-plays on mount
-  const [activeVideoId, setActiveVideoId] = useState<string | null>('v1');
+  const initialVideoId = videoMedia[0]?.id || null;
+  // State for which video is currently playing/focused
+  const [activeVideoId, setActiveVideoId] = useState<string | null>(initialVideoId);
+  // State to remember the last video hovered over successfully
+  const [lastPlayedId, setLastPlayedId] = useState<string | null>(initialVideoId);
 
-  // keep refs to each video element so we can programmatically play/pause
+  // keep refs to each video element
   const videoRefs = useRef<Record<string, HTMLVideoElement | null>>({});
+  // Reference to the entire video section container
+  const videoContainerRef = useRef<HTMLDivElement>(null);
 
   // When activeVideoId changes, play the active video and pause others
   useEffect(() => {
@@ -78,21 +84,29 @@ export default function GalleryPage() {
       const el = refs[id];
       if (!el) return;
       if (id === activeVideoId) {
-        // ensure muted for autoplay, try to play (catch to avoid uncaught promise)
         el.muted = true;
-        // optional: keep currentTime where it was, or reset — I keep position
-        el.play().catch(() => { /* autoplay may be blocked by browser policies */ });
+        el.play().catch(() => { /* Autoplay block */ });
       } else {
         try {
           el.pause();
-          // optional: reset time so hovering starts from beginning
-          // el.currentTime = 0;
         } catch (e) {
           return e;
         }
       }
     });
   }, [activeVideoId]);
+  
+  // Handler when mouse enters a video tile
+  const handleMouseEnter = (id: string) => {
+      setActiveVideoId(id);
+      setLastPlayedId(id); // Update the last played ID on every hover
+  };
+  
+  // Handler when mouse leaves the entire video container section
+  const handleContainerMouseLeave = () => {
+    // This ensures the last successfully hovered video continues playing
+    setActiveVideoId(lastPlayedId);
+  };
 
   // Landscape Col Span adjusted for 3 items in a row on large screens
   const getLandscapeColSpan = () => {
@@ -102,10 +116,11 @@ export default function GalleryPage() {
   // Portrait photos and Videos always use the default 1 column
   const getPortraitVideoColSpan = () => "col-span-1";
 
-  // Correct Aspect Ratio Logic (Unchanged)
+  // Correct Aspect Ratio Logic 
   const getItemPadding = (item: MediaItem) => {
-    if (item.type === 'video' || item.category === 'portrait') return '150%'; // 2:3 ratio
-    if (item.category === 'landscape') return '66.66%'; // 3:2 ratio
+    // All gallery videos will now use the Portrait 2:3 ratio (150%)
+    if (item.type === 'video' || item.category === 'portrait') return '150%'; 
+    if (item.category === 'landscape') return '66.66%'; 
     return '100%';
   };
 
@@ -129,7 +144,8 @@ export default function GalleryPage() {
 
       {/* 2. MEDIA GALLERY GRID */}
       <section className="py-16 px-6 max-w-7xl mx-auto">
-        <AnimatePresence>
+        {/* FIX: Removed <AnimatePresence> tag to resolve the non-unique key error, 
+                as it's not needed for the static list of grid containers/headings. */}
           <motion.h2
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -138,9 +154,11 @@ export default function GalleryPage() {
             Video Highlights
           </motion.h2>
 
-          {/* A. VIDEO GRID (5 columns on XL) */}
+          {/* A. VIDEO GRID (Container with mouse leave logic) */}
           <motion.div
             layout
+            ref={videoContainerRef}
+            onMouseLeave={handleContainerMouseLeave}
             className={`grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6 auto-rows-fr mb-16`}
           >
             {videoMedia.map((item) => {
@@ -159,8 +177,9 @@ export default function GalleryPage() {
                   {/* NATIVE HTML5 VIDEO PLAYER */}
                   <div
                     className="relative w-full"
-                    style={{ paddingBottom: getItemPadding(item) }}
-                    onMouseEnter={() => setActiveVideoId(item.id)}
+                    // Aspect ratio is now portrait (150%)
+                    style={{ paddingBottom: getItemPadding(item) }} 
+                    onMouseEnter={() => handleMouseEnter(item.id)}
                   >
                     <video
                       ref={(el) => {
@@ -172,24 +191,25 @@ export default function GalleryPage() {
                       key={item.id}
                       src={item.src}
                       title={item.title}
-                      poster="/images/gallery/portrait1.jpg"
-                      controls={isCurrentlyPlaying}
+                      controls={true} // controls are programmatically hidden/shown
                       loop
-                      muted // keep muted so autoplay works
+                      muted 
                       playsInline
-                      // don't rely solely on attribute autoPlay; we call play() programmatically in effect
                       autoPlay={isCurrentlyPlaying}
                     >
                       Your browser does support the video tag.
                     </video>
 
-                    {/* Optional Overlay when video is not playing (NO DARK BACKGROUND) */}
+                    {/* Overlay when video is not playing */}
                     {!isCurrentlyPlaying && (
-                      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                      <div className="absolute inset-0 bg-black/40 flex items-center justify-center pointer-events-none transition-opacity duration-300 group-hover:bg-black/20">
                         <PlayCircle className="w-16 h-16 text-white text-opacity-90 drop-shadow-lg" />
                       </div>
                     )}
                   </div>
+                  
+                  {/* Short Description below video */}
+                  
                 </motion.div>
               );
             })}
@@ -204,7 +224,7 @@ export default function GalleryPage() {
             Photo Gallery
           </motion.h2>
 
-          {/* B. LANDSCAPE PHOTO GRID (3 in a row on XL) */}
+          {/* B. LANDSCAPE PHOTO GRID */}
           <motion.div layout className={`grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 md:gap-6 auto-rows-fr mb-12`}>
             {landscapePhotos.map((item) => (
               <motion.div
@@ -231,7 +251,7 @@ export default function GalleryPage() {
             ))}
           </motion.div>
 
-          {/* C. PORTRAIT PHOTO GRID (Standard single-column flow) */}
+          {/* C. PORTRAIT PHOTO GRID */}
           <motion.div layout className={`grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6 auto-rows-fr`}>
             {portraitPhotos.map((item) => (
               <motion.div
@@ -257,7 +277,6 @@ export default function GalleryPage() {
               </motion.div>
             ))}
           </motion.div>
-        </AnimatePresence>
       </section>
 
       {/* 4. FINAL CTA */}

@@ -44,7 +44,7 @@ const faqs = [
     { 
         question: "How much time do I need to commit?", 
         // Note: Using the specific 4-hour commitment from the previous draft for clarity
-        answer: "We request a minimum commitment of **4 hours per week** for at least 3 months. This consistency is essential for the children's growth and trust." 
+        answer: "We request a minimum commitment of 4 hours per week for at least 3 months. This consistency is essential for the children's growth and trust." 
     },
     {
         question: "Will I receive a certificate?",

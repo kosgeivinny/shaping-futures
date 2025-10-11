@@ -4,7 +4,6 @@ import Programs from "@/components/sections/Programs";
 import Events from "@/components/sections/Events";
 import Impact from "@/components/sections/Impact";
 import Success from "@/components/sections/Success";
-import Involved from "@/components/sections/Involved";
 import Partners from "@/components/sections/Partners";
 import Founder from "@/components/sections/Founder";
 
@@ -17,7 +16,6 @@ export default function Home() {
       <Events />
       <Impact />
       <Success />
-      <Involved />
       <Partners />
       <Founder />
     </main>

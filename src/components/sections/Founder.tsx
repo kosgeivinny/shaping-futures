@@ -3,90 +3,70 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 
-export default function Founder() {
+// --- Theme Variables ---
+const PRIMARY_BLUE = "#2d2f55";
+const ACCENT_YELLOW = "#f2e63d";
+// Using a subtle light gradient to differentiate from the pure white or light gray sections
+const SUBTLE_BG = "linear-gradient(to top, #f0f4f8, #ffffff)"; 
+
+export default function FounderMessage() {
   return (
-    <section className="py-20 bg-gradient-to-b from-gray-50 to-white">
-      <div className="max-w-4xl mx-auto px-6 text-center">
-        {/* Title */}
-        <motion.h2
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="text-3xl md:text-4xl font-bold text-[#2d2f55]"
-        >
-          A Message from Our Founder
-        </motion.h2>
+    // Using a subtle gradient for background contrast
+    <section className="py-20" style={{ background: SUBTLE_BG }}>
+      <div className="max-w-6xl mx-auto px-6">
+        
+        {/* Section Title */}
+        <div className="text-center mb-16">
+            <motion.h2
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                viewport={{ once: true }}
+                className="text-4xl md:text-5xl font-extrabold"
+                style={{ color: PRIMARY_BLUE }}
+            >
+                Our <span style={{ color: ACCENT_YELLOW }}>Vision</span>
+            </motion.h2>
+            <p className="mt-3 text-lg text-gray-600 max-w-2xl mx-auto">
+                A personal message from the founder on the belief that drives our mission.
+            </p>
+            <div className="w-16 h-1" style={{ backgroundColor: ACCENT_YELLOW, margin: '12px auto 0' }} />
+        </div>
 
-        <div className="w-20 h-1 bg-[#f2e63d] mx-auto mt-3 rounded-full" />
-
-        {/* Quote */}
-        <motion.blockquote
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          viewport={{ once: true }}
-          className="mt-10 text-lg md:text-xl italic text-gray-700 leading-relaxed"
-        >
-          “For as long as I can remember, I have believed in the power of
-          opportunity. The idea that one small act of kindness—a meal, a lesson,
-          a word of encouragement—can change the trajectory of a life. This
-          belief is what gave birth to <span className="font-semibold">Shaping Futures</span>.”
-        </motion.blockquote>
-
-        {/* Founder profile */}
+        {/* Founder Profile & Quote - Horizontal Layout */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          viewport={{ once: true }}
-          className="mt-10 flex flex-col items-center"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true, amount: 0.3 }}
+            className="bg-white p-6 sm:p-10 rounded-xl shadow-2xl flex flex-col md:flex-row items-start gap-8"
         >
-          <Image
-            src="/images/awards.jpg" 
-            alt="Kevin Odhiambo"
-            width={100}
-            height={100}
-            className="rounded-full shadow-lg"
-          />
-          <h3 className="mt-4 text-xl font-semibold text-[#2d2f55]">
-            Kevin Odhiambo
-          </h3>
-          <p className="text-gray-600">Founder & Visionary, Shaping Futures</p>
+            {/* COLUMN 1: IMAGE (Portrait) */}
+            <div className="flex-shrink-0 w-full md:w-56 flex flex-col items-center text-center">
+                <div className="relative w-40 h-40 rounded-full overflow-hidden border-4 border-white shadow-xl">
+                    <Image
+                        src="/images/founder.jpeg" // Using the recommended founder image placeholder
+                        alt="Kevin Odhiambo, Founder"
+                        fill
+                        className="object-cover object-top"
+                    />
+                </div>
+                <h3 className="mt-4 text-xl font-bold" style={{ color: PRIMARY_BLUE }}>
+                    Kevin Odhiambo
+                </h3>
+                <p className="text-gray-600 text-sm">Founder & Visionary</p>
+            </div>
+            
+            {/* COLUMN 2: MESSAGE & SIGNATURE */}
+            <div className="flex-grow">
+                <p className="text-xl md:text-2xl italic font-serif text-gray-800 leading-snug border-l-4 pl-4" style={{ borderColor: ACCENT_YELLOW }}>
+                    “I believe in the power of opportunity. One small act—a meal, a lesson, a word of encouragement—can truly change the trajectory of a life. This belief is what gave birth to <strong>Shaping Futures</strong>, and together, we are shaping the future of an entire generation.”
+                </p>
+                <p className="mt-6 text-lg font-semibold text-gray-700">
+                    — Kevin Odhiambo
+                </p>
+            </div>
         </motion.div>
-
-        {/* Closing CTA */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          viewport={{ once: true }}
-          className="mt-8 text-lg text-gray-700 font-medium"
-        >
-          Together, we are not just shaping individual lives —
-          we are shaping the future of an entire generation.
-        </motion.p>
-
-        {/* Newsletter / CTA */}
-        <motion.form
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.8 }}
-          viewport={{ once: true }}
-          className="mt-8 flex flex-col sm:flex-row justify-center gap-4"
-        >
-          <input
-            type="email"
-            placeholder="Enter your email"
-            className="px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#f2e63d] w-full sm:w-80"
-          />
-          <button
-            type="submit"
-            className="px-6 py-3 bg-[#2d2f55] text-white rounded-xl shadow-md hover:bg-[#24264a] transition"
-          >
-            Stay Connected
-          </button>
-        </motion.form>
       </div>
     </section>
   );
