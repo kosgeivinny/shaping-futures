@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link"; // Use Link for internal navigation
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { JSX } from "react";
@@ -75,7 +76,6 @@ interface StoryCardProps {
 }
 
 // --- Utility Component for Reusable Story Card ---
-// This must be defined outside or inside the main component to reference StoryItem
 const StoryCard = ({ story, i, aspectRatio = "aspect-square", objectPosition = "object-top" }: StoryCardProps) => (
   <motion.div
     key={i}
@@ -163,7 +163,8 @@ export default function ProgramsPage() {
       
       {/* 1. HERO SECTION */}
       <section 
-        className={`relative bg-[${PRIMARY_BLUE}] text-white py-24 px-6 text-center overflow-hidden`}
+        // FIX: Increased padding-bottom to prevent text spill on diagonal cut.
+        className={`relative bg-[${PRIMARY_BLUE}] text-white py-24 pb-32 px-6 text-center overflow-hidden`}
         style={{ backgroundImage: `linear-gradient(180deg, ${PRIMARY_BLUE}, #1f2041)` }}
       >
         <div className="relative z-10">
@@ -180,7 +181,7 @@ export default function ProgramsPage() {
             initiatives in dance, education, feeding, and more.
           </p>
         </div>
-        {/* Aesthetic diagonal divider */}
+        {/* Aesthetic diagonal divider (Padding fix addresses the spill) */}
         <svg className="absolute bottom-0 left-0 w-full h-auto text-[#f3f4f9]" viewBox="0 0 100 10" preserveAspectRatio="none">
             <polygon fill="currentColor" points="0,10 100,10 100,0"/>
         </svg>
@@ -223,12 +224,17 @@ export default function ProgramsPage() {
                   {prog.title}
                 </h3>
                 <p className="text-gray-600 mb-4">{prog.description}</p>
-                <a
+                {/* 🚀 FIX: Program Button Hover State 
+                    - Default: Blue background, White text.
+                    - Hover: Yellow background, PRIMARY_BLUE text.
+                */}
+                <Link
                   href={prog.link}
-                  className={`inline-block bg-[${PRIMARY_BLUE}] text-white px-6 py-2 rounded-full hover:bg-[${ACCENT_YELLOW}] hover:text-[${PRIMARY_BLUE}] transition font-semibold text-base shadow-md`}
+                  className={`inline-block bg-[${PRIMARY_BLUE}] text-white px-6 py-2 rounded-full 
+                    hover:bg-[${ACCENT_YELLOW}] hover:text-[${PRIMARY_BLUE}] transition font-semibold text-base shadow-md`}
                 >
                   Learn More
-                </a>
+                </Link>
               </div>
             </motion.div>
           ))}
@@ -278,25 +284,35 @@ export default function ProgramsPage() {
 
       {/* 4. CALL TO ACTION */}
       <section className={`py-20 text-center bg-[${LIGHT_BACKGROUND}]`}>
-        <h2 className={`text-4xl font-extrabold text-[${PRIMARY_BLUE}] mb-4`}>
-          Make a <span className={`text-[${ACCENT_YELLOW}]`}>Difference</span> Today!
-        </h2>
-        <p className="text-gray-700 max-w-2xl mx-auto mb-8 text-xl">
-          Join us in transforming lives — volunteer, donate, or spread the word.
-        </p>
-        <div className="flex justify-center gap-6">
-          <a
-            href="/get-involved/volunteer"
-            className={`bg-[${PRIMARY_BLUE}] text-white px-8 py-3 rounded-full font-bold hover:bg-[#1f2041] transition shadow-lg`}
-          >
-            Become a Volunteer
-          </a>
-          <a
-            href="/get-involved/donation"
-            className={`bg-[${ACCENT_YELLOW}] text-[${PRIMARY_BLUE}] px-8 py-3 rounded-full font-bold hover:shadow-xl transition transform hover:scale-[1.05]`}
-          >
-            Donate Now
-          </a>
+        <div className="max-w-7xl mx-auto px-6">
+          <h2 className={`text-4xl font-extrabold text-[${PRIMARY_BLUE}] mb-4`}>
+            Make a <span className={`text-[${ACCENT_YELLOW}]`}>Difference</span> Today!
+          </h2>
+          <p className="text-gray-700 max-w-2xl mx-auto mb-8 text-xl">
+            Join us in transforming lives — volunteer, donate, or spread the word.
+          </p>
+          <div className="flex justify-center gap-6">
+            {/* 🚀 FIX: CTA Button Hover State 1 (Become a Volunteer) 
+                - Default: Blue background, White text.
+                - Hover: Slightly darker Blue background, White text. (Kept your original style but simplified color)
+            */}
+            <Link
+              href="/get-involved/volunteer"
+              className={`bg-[${PRIMARY_BLUE}] text-white px-8 py-3 rounded-full font-bold hover:bg-[#1f2041] transition shadow-lg`}
+            >
+              Become a Volunteer
+            </Link>
+            {/* 🚀 FIX: CTA Button Hover State 2 (Donate Now) 
+                - Default: Yellow background, PRIMARY_BLUE text.
+                - Hover: Yellow background, PRIMARY_BLUE text + transform scale. (Kept your original style)
+            */}
+            <Link
+              href="/get-involved/donation"
+              className={`bg-[${ACCENT_YELLOW}] text-[${PRIMARY_BLUE}] px-8 py-3 rounded-full font-bold hover:shadow-xl transition transform hover:scale-[1.05]`}
+            >
+              Donate Now
+            </Link>
+          </div>
         </div>
       </section>
     </main>

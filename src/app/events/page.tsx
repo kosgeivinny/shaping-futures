@@ -190,7 +190,7 @@ export default function EventsPage() {
         <div className="text-center mt-16">
             <Link
                 href="/gallery"
-                className={`bg-transparent border-2 border-[${ACCENT_YELLOW}] text-[${ACCENT_YELLOW}] font-semibold px-8 py-3 rounded-full hover:bg-[${ACCENT_YELLOW}] hover:text-[${PRIMARY_BLUE}] transition text-lg`}
+                className={`bg-transparent border-2 border-[${ACCENT_YELLOW}] text-[${ACCENT_YELLOW}] font-semibold px-8 py-3 rounded-full hover:bg-[#f2e63d] hover:text-[${PRIMARY_BLUE}] transition text-lg`}
             >
                 View Full Photo Gallery →
             </Link>

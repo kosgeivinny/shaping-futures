@@ -48,8 +48,8 @@ export default function Footer() {
           <Image
             src="/logo.png"
             alt="Shaping Futures Logo"
-            width={50} // Slightly larger logo
-            height={50}
+            width={60} // Slightly larger logo
+            height={60}
             className="mb-4"
           />
           <p className="text-sm leading-relaxed max-w-[250px]">
@@ -156,8 +156,8 @@ export default function Footer() {
         <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-32 h-[3px] bg-gradient-to-r from-transparent via-[${ACCENT_YELLOW}] to-transparent`}></div>
         <p className="pt-2">
           © {new Date().getFullYear()} Shaping Futures. All rights reserved. |{" "}
-          <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link> |{" "}
-          <Link href="/terms" className="hover:text-white transition-colors">Terms of Use</Link>
+          <Link href="#" className="hover:text-white transition-colors">Privacy Policy</Link> |{" "}
+          <Link href="#" className="hover:text-white transition-colors">Terms of Use</Link>
         </p>
       </div>
     </footer>

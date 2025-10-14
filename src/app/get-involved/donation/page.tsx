@@ -14,10 +14,10 @@ const ACCENT_YELLOW = "#f2e63d";
 
 // Suggested donation amounts with brief impact descriptions
 const suggestedAmounts = [
-  { amount: 'Ksh 500', impact: 'Funds one day of meals for 5 children.' },
-  { amount: 'Ksh 2,000', impact: 'Provides one student with full school supplies.' },
-  { amount: 'Ksh 5,000', impact: 'Sponsors a student for one month of mentorship.' },
-  { amount: 'Ksh 15,000', impact: 'Covers partial tuition for a student for one term.' },
+  { amount: '$ 5', impact: 'Funds one day of meals for 5 children.' },
+  { amount: '$ 20', impact: 'Provides one student with full school supplies.' },
+  { amount: '$ 50', impact: 'Sponsors a student for one month of mentorship.' },
+  { amount: '$ 150', impact: 'Covers partial tuition for a student for one term.' },
 ];
 
 // Helper component for copying details (Enhanced with copy functionality)

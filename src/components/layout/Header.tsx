@@ -4,9 +4,14 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, Shirt, BookOpen, GraduationCap, Soup, Heart, Music, Menu, X, Facebook, Twitter, Instagram, ArrowRight } from "lucide-react"; 
+// Ensure all necessary Lucide icons are imported
+import { ChevronDown, Shirt, BookOpen, GraduationCap, Soup, Heart, Music, Menu, X, ArrowRight } from "lucide-react"; 
 
-// --- Theme Variables (Corrected to include PRIMARY_BLUE) ---
+// 🚨 IMPORT THE SHARED SOCIALICONS COMPONENT 🚨
+import SocialIcons from "@/components/ui/SocialIcons"; 
+
+// --- Theme Variables ---
+const PRIMARY_BLUE = "#2d2f55"; // Defined for use in color classes
 const ACCENT_YELLOW = "#f2e63d";
 
 // --- Programs Data (Updated to your specific list) ---
@@ -63,26 +68,7 @@ const DropdownItem = ({ title, href, description, icon: Icon }: typeof programLi
   </Link>
 );
 
-// --- Social Icons Component (Using Lucide Icons) ---
-const SocialIcons = ({ scrolled }: { scrolled: boolean }) => {
-    // Only displayed on desktop (lg:flex)
-    const iconColor = scrolled ? 'text-gray-600' : 'text-white';
-    const hoverColor = `hover:text-[${ACCENT_YELLOW}]`;
-
-    return (
-        <div className={`hidden lg:flex space-x-4 ${iconColor}`}>
-            <a href="https://www.facebook.com/SHAFFS35" aria-label="Facebook" className={`transition transform hover:scale-110 ${hoverColor}`}>
-                <Facebook className="w-5 h-5" />
-            </a>
-            <a href="https://x.com/ShapingF23501" aria-label="Twitter" className={`transition transform hover:scale-110 ${hoverColor}`}>
-                <Twitter className="w-5 h-5" />
-            </a>
-            <a href="https://www.instagram.com/shapingfutures35/" aria-label="Instagram" className={`transition transform hover:scale-110 ${hoverColor}`}>
-                <Instagram className="w-5 h-5" />
-            </a>
-        </div>
-    );
-}
+// ❌ DELETED: Removed the local SocialIcons definition to use the shared component
 
 // --- Mobile Navigation List Item Component ---
 const MobileNavLink = ({ href, label, onClick }: { href: string, label: string, onClick: () => void }) => (
@@ -92,7 +78,7 @@ const MobileNavLink = ({ href, label, onClick }: { href: string, label: string, 
     className="flex justify-between items-center py-3 px-4 text-white hover:bg-[#353769] transition-colors rounded-lg text-lg font-medium"
   >
     {label}
-    <ArrowRight className="w-5 h-5 text-[#f2e63d]" />
+    <ArrowRight className={`w-5 h-5 text-[${ACCENT_YELLOW}]`} />
   </Link>
 );
 
@@ -142,7 +128,8 @@ export default function Header() {
 
   return (
     <header
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
+      // ✅ FIX: Raised z-index to z-[100] for better stacking context over videos
+      className={`fixed top-0 left-0 w-full z-[100] transition-all duration-300 ${
         scrolled ? `bg-white shadow-xl border-b border-gray-100` : "bg-transparent"
       }`}
       style={{
@@ -196,8 +183,11 @@ export default function Header() {
                       href="/programs"
                       className={`flex items-center transition-colors duration-200 cursor-pointer ${scrolled ? 'text-gray-800' : 'text-white'} hover:text-[${ACCENT_YELLOW}]`}
                       onClick={(e) => {
-                        if (isProgramsOpen) e.preventDefault();
-                        setIsProgramsOpen(!isProgramsOpen);
+                         // Prevents navigation if dropdown is open or if it's opened via click on touch devices
+                        if (!isProgramsOpen) {
+                            e.preventDefault(); 
+                            setIsProgramsOpen(true);
+                        }
                       }}
                     >
                       Programs
@@ -213,16 +203,16 @@ export default function Header() {
                           animate="visible"
                           exit="hidden"
                           variants={dropdownVariants}
-                          className="absolute left-1/2 transform -translate-x-1/2 mt-4 p-4 bg-white rounded-xl shadow-2xl w-[600px] border-t-4 border-[#2d2f55] origin-top"
+                          className={`absolute left-1/2 transform -translate-x-1/2 mt-4 p-4 bg-white rounded-xl shadow-2xl w-[600px] border-t-4 border-[${PRIMARY_BLUE}] origin-top`}
                         >
                           <div className="grid grid-cols-2 gap-x-6 gap-y-4">
                             {programLinks.map((program) => (
                               <DropdownItem key={program.href} {...program} />
                             ))}
                           </div>
-                          <div className="mt-4 pt-4 border-t border-gray-100 flex justify-between items-center bg-[#f7f7f7] p-3 rounded-lg">
-                            <p className="text-sm font-semibold text-[#2d2f55]">See the full scope of our work.</p>
-                            <Link href="/programs" className="text-sm font-bold text-white bg-[#f2e63d] py-1.5 px-4 rounded-full transition-opacity hover:opacity-90">
+                          <div className={`mt-4 pt-4 border-t border-gray-100 flex justify-between items-center bg-[#f7f7f7] p-3 rounded-lg`}>
+                            <p className={`text-sm font-semibold text-[${PRIMARY_BLUE}]`}>See the full scope of our work.</p>
+                            <Link href="/programs" className={`text-sm font-bold text-white bg-[${ACCENT_YELLOW}] py-1.5 px-4 rounded-full transition-opacity hover:opacity-90`}>
                               View All Programs
                             </Link>
                           </div>
@@ -237,13 +227,16 @@ export default function Header() {
             return navLinkElement;
           })}
 
-          <SocialIcons scrolled={scrolled} />
+          {/* ✅ USING SHARED SOCIALICONS COMPONENT */}
+          <SocialIcons 
+            className={`space-x-4 ${scrolled ? 'text-gray-600' : 'text-white'} [&>a:hover]:text-[${ACCENT_YELLOW}]`} 
+          />
         </nav>
 
         {/* --- MOBILE HAMBURGER ICON (Visible on Mobile) --- */}
         <button 
           onClick={() => setIsMobileMenuOpen(true)}
-          className={`lg:hidden p-2 rounded-lg transition-colors ${scrolled ? 'text-[#2d2f55] hover:bg-gray-100' : 'text-white hover:bg-white/10'}`}
+          className={`lg:hidden p-2 rounded-lg transition-colors ${scrolled ? `text-[${PRIMARY_BLUE}] hover:bg-gray-100` : 'text-white hover:bg-white/10'}`}
           aria-label="Toggle Menu"
         >
           <Menu className="w-6 h-6" />
@@ -258,7 +251,8 @@ export default function Header() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 z-50 lg:hidden" // Backdrop
+            // ✅ FIX: Z-index set to z-[101] to ensure it is above the main header (z-[100])
+            className="fixed inset-0 bg-black/50 z-[101] lg:hidden" // Backdrop
             onClick={closeMenus}
           >
             <motion.div
@@ -267,7 +261,7 @@ export default function Header() {
               exit="hidden"
               variants={sidebarVariants}
               // Sidebar styling
-              className="absolute top-0 right-0 w-3/4 max-w-sm h-full bg-[#2d2f55] shadow-2xl p-6 overflow-y-auto"
+              className={`absolute top-0 right-0 w-3/4 max-w-sm h-full bg-[${PRIMARY_BLUE}] shadow-2xl p-6 overflow-y-auto`}
               onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside
             >
               {/* Header and Close Button */}
@@ -281,7 +275,7 @@ export default function Header() {
                 />
                 <button 
                   onClick={closeMenus}
-                  className="p-2 text-white hover:text-[#f2e63d] transition-colors"
+                  className={`p-2 text-white hover:text-[${ACCENT_YELLOW}] transition-colors`}
                   aria-label="Close Menu"
                 >
                   <X className="w-6 h-6" />
@@ -292,24 +286,28 @@ export default function Header() {
               <div className="pt-6 space-y-2">
                 
                 {/* Regular Links */}
-                {primaryNavLinks.filter(link => link.label !== 'Programs').map(link => (
-                  <MobileNavLink 
-                    key={link.href} 
-                    href={link.href} 
-                    label={link.label} 
-                    onClick={closeMenus} 
-                  />
+                {primaryNavLinks
+                    .flatMap(link => link.label === 'Events' ? [{ href: '/programs', label: 'Programs' }, link] : [link])
+                    .filter(link => link.label !== 'Programs' || !isMobileProgramsOpen)
+                    .map(link => (
+                      <MobileNavLink 
+                        key={link.href} 
+                        href={link.href} 
+                        label={link.label} 
+                        onClick={closeMenus} 
+                      />
                 ))}
+
 
                 {/* Programs Collapsible Menu */}
                 <div className="border-t border-gray-700 pt-2 mt-2">
                     <button
                         onClick={() => setIsMobileProgramsOpen(!isMobileProgramsOpen)}
-                        className="flex justify-between items-center w-full py-3 px-4 text-white hover:bg-[#353769] transition-colors rounded-lg text-lg font-bold"
+                        className={`flex justify-between items-center w-full py-3 px-4 text-white hover:bg-[#353769] transition-colors rounded-lg text-lg font-bold`}
                     >
                         Programs
                         <ChevronDown 
-                            className={`w-5 h-5 transition-transform duration-300 ${isMobileProgramsOpen ? 'rotate-180 text-[#f2e63d]' : 'rotate-0'}`} 
+                            className={`w-5 h-5 transition-transform duration-300 ${isMobileProgramsOpen ? `rotate-180 text-[${ACCENT_YELLOW}]` : 'rotate-0'}`} 
                         />
                     </button>
                     
@@ -328,7 +326,7 @@ export default function Header() {
                                         key={program.href}
                                         href={program.href}
                                         onClick={closeMenus}
-                                        className="block py-2 pl-8 pr-4 text-sm text-gray-200 hover:text-white hover:bg-[#2d2f55] transition-colors"
+                                        className={`block py-2 pl-8 pr-4 text-sm text-gray-200 hover:text-white hover:bg-[${PRIMARY_BLUE}] transition-colors`}
                                     >
                                         {program.title}
                                     </Link>
@@ -336,7 +334,7 @@ export default function Header() {
                                 <Link
                                     href="/programs"
                                     onClick={closeMenus}
-                                    className="block py-2 pl-8 pr-4 text-sm text-[#f2e63d] hover:text-white hover:bg-[#2d2f55] transition-colors font-semibold border-t border-gray-700"
+                                    className={`block py-2 pl-8 pr-4 text-sm text-[${ACCENT_YELLOW}] hover:text-white hover:bg-[${PRIMARY_BLUE}] transition-colors font-semibold border-t border-gray-700`}
                                 >
                                     View All Programs
                                 </Link>
@@ -351,15 +349,14 @@ export default function Header() {
                   <Link
                     href="/get-involved/donation"
                     onClick={closeMenus}
-                    className="flex justify-center items-center w-full bg-[#f2e63d] text-[#2d2f55] font-extrabold px-5 py-3 rounded-xl shadow-lg transition-colors hover:bg-white text-lg"
+                    className={`flex justify-center items-center w-full bg-[${ACCENT_YELLOW}] text-[${PRIMARY_BLUE}] font-extrabold px-5 py-3 rounded-xl shadow-lg transition-colors hover:bg-white text-lg`}
                   >
                     Donate Today!
                   </Link>
 
                   <div className="flex justify-center space-x-6 mt-6">
-                    <a href="#" aria-label="Facebook" className="text-white hover:text-[#f2e63d] transition"><Facebook className="w-6 h-6" /></a>
-                    <a href="#" aria-label="Twitter" className="text-white hover:text-[#f2e63d] transition"><Twitter className="w-6 h-6" /></a>
-                    <a href="#" aria-label="Instagram" className="text-white hover:text-[#f2e63d] transition"><Instagram className="w-6 h-6" /></a>
+                    {/* ✅ USING SHARED SOCIALICONS COMPONENT */}
+                    <SocialIcons className={`text-white hover:text-[${ACCENT_YELLOW}] space-x-6`} />
                   </div>
               </div>
               
