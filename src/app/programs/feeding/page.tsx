@@ -101,7 +101,7 @@ export default function FeedingProgramPage() {
         </div>
       </section>
       
-      ---
+      
       
       {/* 2. PROGRAM COMPONENTS */}
       <section className="py-20 px-6 max-w-7xl mx-auto">
@@ -116,7 +116,7 @@ export default function FeedingProgramPage() {
         </div>
       </section>
 
-      ---
+      
 
       {/* 3. IMPACT STATEMENT & CALL TO ACTION */}
       <section className="py-20 px-6 text-center" style={{ backgroundColor: WHITE }}>
@@ -153,7 +153,7 @@ export default function FeedingProgramPage() {
         </div>
       </section>
 
-      ---
+      
 
       {/* 4. PROGRAM GALLERY (2 Rows of 3 for visibility) */}
       <section className="py-16 px-4 md:px-6 max-w-7xl mx-auto">
@@ -182,7 +182,7 @@ export default function FeedingProgramPage() {
         </div>
       </section>
 
-      ---
+      
 
       {/* 5. DUAL CTA - Volunteer & Partner */}
       <section className="text-center py-20 text-black" style={{ backgroundColor: LIGHT_GRAY }}>

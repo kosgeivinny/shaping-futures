@@ -102,7 +102,7 @@ export default function SanitaryDonationPage() {
         </div>
       </section>
       
-      ---
+      
       
       {/* 2. PROGRAM COMPONENTS */}
       <section className="py-20 px-6 max-w-7xl mx-auto">
@@ -117,7 +117,7 @@ export default function SanitaryDonationPage() {
         </div>
       </section>
 
-      ---
+      
 
       {/* 3. IMPACT STATEMENT & DONATION CTA - Split Section */}
       <section className="py-20 px-6" style={{ backgroundColor: WHITE }}>
@@ -172,7 +172,7 @@ export default function SanitaryDonationPage() {
         </div>
       </section>
 
-      ---
+      
 
       {/* 4. PROGRAM GALLERY (3 Images in a Single Row) */}
       <section className="py-16 px-4 md:px-6 max-w-7xl mx-auto">
@@ -206,7 +206,7 @@ export default function SanitaryDonationPage() {
         </div>
       </section>
 
-      ---
+      
 
       {/* 5. DUAL CTA - Product Donation & Volunteer */}
       <section className="text-center py-20 text-black" style={{ backgroundColor: ACCENT_YELLOW }}>

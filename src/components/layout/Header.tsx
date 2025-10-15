@@ -212,7 +212,7 @@ export default function Header() {
                           </div>
                           <div className={`mt-4 pt-4 border-t border-gray-100 flex justify-between items-center bg-[#f7f7f7] p-3 rounded-lg`}>
                             <p className={`text-sm font-semibold text-[${PRIMARY_BLUE}]`}>See the full scope of our work.</p>
-                            <Link href="/programs" className={`text-sm font-bold text-white bg-[${ACCENT_YELLOW}] py-1.5 px-4 rounded-full transition-opacity hover:opacity-90`}>
+                            <Link href="/programs" className={`text-sm font-bold text-[#2d2f55] bg-[${ACCENT_YELLOW}] py-1.5 px-4 rounded-full transition-opacity hover:opacity-90 hover:bg-[#2d2f55] hover:text-white`}>
                               View All Programs
                             </Link>
                           </div>
@@ -326,7 +326,7 @@ export default function Header() {
                                         key={program.href}
                                         href={program.href}
                                         onClick={closeMenus}
-                                        className={`block py-2 pl-8 pr-4 text-sm text-gray-200 hover:text-white hover:bg-[${PRIMARY_BLUE}] transition-colors`}
+                                        className={`block py-2 pl-8 pr-4 text-sm text-gray-200 hover:text-white hover:bg-[#2d2f55] transition-colors`}
                                     >
                                         {program.title}
                                     </Link>
@@ -334,7 +334,7 @@ export default function Header() {
                                 <Link
                                     href="/programs"
                                     onClick={closeMenus}
-                                    className={`block py-2 pl-8 pr-4 text-sm text-[${ACCENT_YELLOW}] hover:text-white hover:bg-[${PRIMARY_BLUE}] transition-colors font-semibold border-t border-gray-700`}
+                                    className={`block py-2 pl-8 pr-4 text-sm text-[${ACCENT_YELLOW}] hover:text-white hover:bg-[#2d2f55] transition-colors font-semibold border-t border-gray-700`}
                                 >
                                     View All Programs
                                 </Link>

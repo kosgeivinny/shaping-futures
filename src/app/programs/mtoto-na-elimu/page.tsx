@@ -103,7 +103,7 @@ export default function MtotoNaElimuPage() {
         </div>
       </section>
       
-      ---
+      
       
       {/* 2. PROGRAM COMPONENTS */}
       <section className="py-20 px-6 max-w-7xl mx-auto">
@@ -118,7 +118,7 @@ export default function MtotoNaElimuPage() {
         </div>
       </section>
 
-      ---
+      
 
       {/* 3. URGENCY & SPONSORSHIP CTA - Split Section */}
       <section className="py-20 px-6" style={{ backgroundColor: WHITE }}>
@@ -173,7 +173,7 @@ export default function MtotoNaElimuPage() {
         </div>
       </section>
 
-      ---
+      
 
       {/* 4. PROGRAM GALLERY (2 Rows of 3 for portrait visibility) */}
       <section className="py-16 px-4 md:px-6 max-w-7xl mx-auto">
@@ -203,7 +203,7 @@ export default function MtotoNaElimuPage() {
         </div>
       </section>
 
-      ---
+      
 
       {/* 5. DUAL CTA - Other Ways to Support (Mentorship & General Donation) */}
       <section className="text-center py-20 text-black" style={{ backgroundColor: ACCENT_YELLOW }}>

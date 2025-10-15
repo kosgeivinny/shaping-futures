@@ -13,10 +13,10 @@ const CARD_BG = "#353764"; // Lighter blue for card background
 
 // --- NEW DATA ---
 const stats = [
-  { label: "Children & Families Reached (Drives)", target: 7773, icon: Users },
-  { label: "Students Supported (Fees & Supplies)", target: 20, icon: School },
-  { label: "Children’s Homes Supported", target: 17, icon: Home },
-  { label: "Active Volunteers & Mentors", target: 30, icon: HeartHandshake },
+  { label: "Children and families supported through our clothes donation drives.", target: 7700, icon: Users },
+  { label: "Students supported with school fees & supplies", target: 20, icon: School },
+  { label: "Children’s homes visited and supported with essential donations.", target: 17, icon: Home },
+  { label: "Volunteers & mentors actively engaged", target: 30, icon: HeartHandshake },
 ];
 
 function Counter({ target }: { target: number }) {
@@ -63,7 +63,7 @@ export default function Impact() {
         
         {/* Section Title & Subheading */}
         <h2 className="text-4xl md:text-5xl font-extrabold text-white">
-          Our Impact at a Glance
+          <span style={{color: ACCENT_YELLOW}}>Our Impact</span> at a Glance
         </h2>
         <p className="mt-4 text-xl text-gray-300 max-w-4xl mx-auto">
           Together with our partners and supporters, <strong>Shaping Futures</strong> has created life-changing opportunities for children and youth across Kenya.
@@ -87,7 +87,7 @@ export default function Impact() {
               
               {/* Counter - Removed the unnecessary '+' since the target is very specific */}
               <p className="text-5xl font-black mb-3" style={{ color: ACCENT_YELLOW }}>
-                <Counter target={stat.target} />
+                <Counter target={stat.target} />+
               </p>
               
               {/* Label */}

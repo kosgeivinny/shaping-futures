@@ -131,7 +131,7 @@ export default function DanceProgramPage() {
         </div>
       </section>
       
-      ---
+      
       
       {/* 2. DANCE VIDEO GALLERY */}
       <section 
@@ -181,16 +181,13 @@ export default function DanceProgramPage() {
                     )}
                   </div>
                   
-                  <div className="p-3 text-center">
-                    <p className="text-sm font-medium text-gray-700 leading-snug">{item.description}</p>
-                  </div>
+                  
                 </motion.div>
               );
             })}
         </div>
       </section>
 
-      ---
 
       {/* 3. FEATURE/IMPACT STATEMENT */}
       <section className="bg-white py-12 px-6">
@@ -203,7 +200,7 @@ export default function DanceProgramPage() {
                 className="p-4"
             >
                 <Trophy className="w-10 h-10 mx-auto mb-3" style={{ color: ACCENT_YELLOW }} />
-                <h3 className="text-3xl font-bold" style={{ color: PRIMARY_BLUE }}>4+</h3>
+                <h3 className="text-3xl font-bold" style={{ color: PRIMARY_BLUE }}>50+</h3>
                 <p className="text-sm text-gray-600">Styles of Dance Taught</p>
             </motion.div>
             <motion.div 
@@ -225,13 +222,13 @@ export default function DanceProgramPage() {
                 className="p-4"
             >
                 <School className="w-10 h-10 mx-auto mb-3" style={{ color: ACCENT_YELLOW }} />
-                <h3 className="text-3xl font-bold" style={{ color: PRIMARY_BLUE }}>8 Yrs</h3>
+                <h3 className="text-3xl font-bold" style={{ color: PRIMARY_BLUE }}>6 Yrs</h3>
                 <p className="text-sm text-gray-600">Of Community Dance Education</p>
             </motion.div>
         </div>
       </section>
 
-      ---
+      
 
       {/* 4. PROGRAM OVERVIEW & BENEFITS */}
       <section className="py-20 px-6 max-w-7xl mx-auto">
@@ -246,7 +243,7 @@ export default function DanceProgramPage() {
         </div>
       </section>
 
-      ---
+    
 
       {/* 5. PRIMARY ENROLLMENT CTA (UPDATED LINK) */}
       <section className="text-center py-20 text-black" style={{ backgroundColor: ACCENT_YELLOW }}>

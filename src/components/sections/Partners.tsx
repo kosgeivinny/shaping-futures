@@ -25,7 +25,7 @@ export default function Partners() {
       <div className="max-w-7xl mx-auto px-6 text-center">
         {/* Title - Changed text color to white */}
         <h2 className="text-4xl md:text-5xl font-extrabold text-white">
-          Our Valued <span style={{ color: ACCENT_YELLOW }}>Partners</span> & Sponsors
+          Our Valued <span style={{ color: ACCENT_YELLOW }}>Partners</span>
         </h2>
         <p className="mt-3 text-lg text-gray-300 max-w-3xl mx-auto">
           We’re proud to collaborate with organizations and individuals that support our mission of empowering youth and shaping brighter futures.

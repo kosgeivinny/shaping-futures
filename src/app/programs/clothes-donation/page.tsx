@@ -93,7 +93,7 @@ export default function ClothesDonationPage() {
         </div>
       </section>
       
-      ---
+      
       
       {/* 2. PROGRAM OVERVIEW / WHY IT MATTERS */}
       <section className="py-20 px-6 max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
@@ -140,7 +140,7 @@ export default function ClothesDonationPage() {
         </motion.div>
       </section>
 
-      ---
+      
 
       {/* 3. HOW TO DONATE - Step-by-Step Guide */}
       <section className="py-20 px-6" style={{ backgroundColor: WHITE }}>
@@ -164,7 +164,7 @@ export default function ClothesDonationPage() {
                 whileHover={{ y: -3 }}
             >
                 <Link 
-                    href="/get-involved/donations"
+                    href="/get-involved/donation"
                     className="inline-flex items-center bg-[#2d2f55] text-white font-extrabold px-8 py-3 rounded-full shadow-xl text-lg transition-colors duration-300 hover:bg-[#1f2041]"
                 >
                     View Drop-off Locations & Guidelines
@@ -174,7 +174,7 @@ export default function ClothesDonationPage() {
         </div>
       </section>
 
-      ---
+      
       
       {/* 4. IMPACT GALLERY (Visual Storytelling) */}
       <section className="py-16 px-4 md:px-6 max-w-7xl mx-auto">
@@ -204,7 +204,7 @@ export default function ClothesDonationPage() {
         </div>
       </section>
 
-      ---
+      
 
       {/* 5. DUAL CTA - Other Ways to Support (Financial & Volunteer) */}
       <section className="text-center py-20 text-black" style={{ backgroundColor: ACCENT_YELLOW }}>

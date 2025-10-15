@@ -99,7 +99,7 @@ export default function LifeSkillsPage() {
         </div>
       </section>
       
-      ---
+      
       
       {/* 2. PROGRAM OVERVIEW / CORE MODULES */}
       <section className="py-20 px-6 max-w-7xl mx-auto">
@@ -114,7 +114,7 @@ export default function LifeSkillsPage() {
         </div>
       </section>
 
-      ---
+      
 
       {/* 3. BENEFITS & IMPACT - Split Section */}
       <section className="py-20 px-6" style={{ backgroundColor: WHITE }}>
@@ -176,7 +176,7 @@ export default function LifeSkillsPage() {
         </div>
       </section>
 
-      ---
+      
 
       {/* 4. PROGRAM GALLERY (2 Rows of 3 for visibility) */}
       <section className="py-16 px-4 md:px-6 max-w-7xl mx-auto">
@@ -204,7 +204,7 @@ export default function LifeSkillsPage() {
         </div>
       </section>
 
-      ---
+      
 
       {/* 5. GET INVOLVED CTA (Enrollment & Mentorship) */}
       <section className="text-center py-20 text-black" style={{ backgroundColor: ACCENT_YELLOW }}>
