@@ -1,18 +1,15 @@
 // src/app/layout.tsx
 
 import type { Metadata } from "next";
-// Next.js Fonts: Use the optimized font loader
+import Script from "next/script"; // ✅ Import for Google Analytics
 import { Geist, Geist_Mono } from "next/font/google";
-// Global styles import
 import "../styles/globals.css";
 
-// Component Imports
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import GlobalPreloader from "@/components/GlobalPreloader"; 
-
-// Framer Motion Import for exit animations
-import { AnimatePresence } from 'framer-motion';
+import GlobalPreloader from "@/components/GlobalPreloader";
+import { AnimatePresence } from "framer-motion";
+import AnalyticsTracker from "@/components/AnalyticsTracker"; // 👈 Moved to separate client file
 
 // --- Font Configuration ---
 const geistSans = Geist({
@@ -28,41 +25,46 @@ const geistMono = Geist_Mono({
 // --- Metadata Configuration (SEO) ---
 export const metadata: Metadata = {
   title: {
-    default: "Shaping Futures | Empowering Youth", // Default title
-    template: "%s | Shaping Futures", // Template for page-specific titles
+    default: "Shaping Futures | Empowering Youth",
+    template: "%s | Shaping Futures",
   },
-  description: "Empowering youth through dance, education, and community support in Nairobi.", // Slightly richer description
+  description:
+    "Empowering youth through dance, education, and community support in Nairobi.",
 };
 
-// --- Layout Component ---
-
-// Define the expected structure of the content passed to the layout
-type RootLayoutProps = {
+// --- Root Layout Component ---
+export default function RootLayout({
+  children,
+}: {
   children: React.ReactNode;
-};
-
-export default function RootLayout({ children }: RootLayoutProps) {
+}) {
   return (
     <html lang="en">
+      <head>
+        {/* ✅ Google Analytics (GA4) */}
+        <Script
+          strategy="afterInteractive"
+          src="https://www.googletagmanager.com/gtag/js?id=G-0TL33P5V0H"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-0TL33P5V0H');
+          `}
+        </Script>
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {/*
-          AnimatePresence is crucial here:
-          - mode="wait" ensures the Preloader finishes its exit animation before mounting the main content.
-          - initial={true} ensures the preloader runs on the initial load.
-        */}
+        {/* ✅ Client-side route tracker for GA */}
+        <AnalyticsTracker />
+
         <AnimatePresence mode="wait" initial={true}>
-          {/* We pass the entire application structure (Header, main content, Footer) 
-            as children to the GlobalPreloader, allowing it to control the initial view 
-            and exit sequence before displaying the final page.
-          */}
           <GlobalPreloader>
             <Header />
-            {/* The main content area where page components are rendered */}
-            <main>
-              {children}
-            </main>
+            <main>{children}</main>
             <Footer />
           </GlobalPreloader>
         </AnimatePresence>
