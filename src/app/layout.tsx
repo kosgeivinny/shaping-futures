@@ -1,7 +1,5 @@
 // src/app/layout.tsx
-
 import type { Metadata } from "next";
-import Script from "next/script"; // ✅ Import for Google Analytics
 import { Geist, Geist_Mono } from "next/font/google";
 import "../styles/globals.css";
 
@@ -9,7 +7,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import GlobalPreloader from "@/components/GlobalPreloader";
 import { AnimatePresence } from "framer-motion";
-import AnalyticsTracker from "@/components/AnalyticsTracker"; // 👈 Moved to separate client file
+import Analytics from "@/components/AnalyticsTracker"; // ✅ new clean analytics client file
 
 // --- Font Configuration ---
 const geistSans = Geist({
@@ -40,26 +38,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <head>
-        {/* ✅ Google Analytics (GA4) */}
-        <Script
-          strategy="afterInteractive"
-          src="https://www.googletagmanager.com/gtag/js?id=G-0TL33P5V0H"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-0TL33P5V0H');
-          `}
-        </Script>
-      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {/* ✅ Client-side route tracker for GA */}
-        <AnalyticsTracker />
+        {/* ✅ Load Google Analytics scripts here */}
+        <Analytics />
 
         <AnimatePresence mode="wait" initial={true}>
           <GlobalPreloader>
