@@ -5,7 +5,6 @@ import Script from "next/script";
 import { useEffect } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 
-// Use your actual GA4 Measurement ID
 const GA_ID = "G-0TL33P5V0H"; 
 
 export default function Analytics() {
