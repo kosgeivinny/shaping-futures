@@ -3,6 +3,7 @@ export {};
 
 declare global {
   interface Window {
-    gtag: (...args: unknown[]) => void;
+    // Using 'any[]' is common here since the gtag arguments are complex and variable
+    gtag: (...args: unknown[]) => void; 
   }
 }
