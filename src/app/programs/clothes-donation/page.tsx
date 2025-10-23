@@ -4,6 +4,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Shirt, MapPin, Heart, ArrowRight, HandCoins, Users } from 'lucide-react'; 
+import { useState } from "react";
+
 
 // --- Theme Variables ---
 const PRIMARY_BLUE = "#2d2f55";
@@ -56,6 +58,8 @@ export default function ClothesDonationPage() {
             <p className="text-gray-600 text-sm">{description}</p>
         </motion.div>
     );
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
 
   return (
     <main className="bg-[#f8f9fb]">
@@ -162,15 +166,16 @@ export default function ClothesDonationPage() {
             <motion.div 
                 className="mt-12 text-center"
                 whileHover={{ y: -3 }}
-            >
-                <Link 
-                    href="/get-involved/donation"
+                >
+                <button
+                    onClick={() => setIsModalOpen(true)}
                     className="inline-flex items-center bg-[#2d2f55] text-white font-extrabold px-8 py-3 rounded-full shadow-xl text-lg transition-colors duration-300 hover:bg-[#1f2041]"
                 >
                     View Drop-off Locations & Guidelines
                     <ArrowRight className="w-5 h-5 ml-2" />
-                </Link>
+                </button>
             </motion.div>
+
         </div>
       </section>
 
@@ -240,6 +245,60 @@ export default function ClothesDonationPage() {
             </motion.div>
         </div>
       </section>
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50 px-4">
+            <motion.div 
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.3 }}
+            className="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-8 relative"
+            >
+            <button 
+                onClick={() => setIsModalOpen(false)}
+                className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-xl font-bold"
+            >
+                ×
+            </button>
+
+            <h3 className="text-2xl font-bold mb-4 text-[#2d2f55]">
+                Drop-off Locations & Contacts
+            </h3>
+
+            <p className="text-gray-700 mb-4">
+              Support our clothes donation program by providing gently used clothing and school materials.
+            </p>
+
+            <div className="space-y-2 text-gray-700">
+              <p>
+                <strong>📍 Drop-off Location:</strong><br />
+                Piedmont Plaza, Opp. Kenya Science, Off Ngong Road
+              </p>
+              <p>
+                <strong>📞 Contact:</strong> +254 757 050 679
+              </p>
+              <p>
+                <strong>📧 Email:</strong> info@shapingfutures.or.ke
+              </p>
+            </div>
+
+            <div className="mt-6 text-center">
+                <p className="text-gray-600 text-sm">
+                Drop-offs accepted <strong>Monday–Saturday, 9 AM – 4 PM</strong>.
+                </p>
+            </div>
+
+            <motion.button
+                onClick={() => setIsModalOpen(false)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="mt-6 bg-[#2d2f55] text-white px-6 py-2 rounded-full font-semibold hover:bg-[#1f2041]"
+            >
+                Got It
+            </motion.button>
+            </motion.div>
+        </div>
+        )}
+
     </main>
   );
 }

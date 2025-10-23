@@ -98,10 +98,54 @@ const CopyDetail = ({ label, value }: { label: string; value: string }) => {
   );
 };
 
+const Modal = ({
+  show,
+  onClose,
+  title,
+  children,
+}: {
+  show: boolean;
+  onClose: () => void;
+  title: string;
+  children: React.ReactNode;
+}) => (
+  <AnimatePresence>
+    {show && (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4"
+      >
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.9, opacity: 0 }}
+          transition={{ duration: 0.3 }}
+          className="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 relative"
+        >
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+          >
+            &times;
+          </button>
+          <h3 className="text-2xl font-bold mb-4 text-[#2d2f55]">{title}</h3>
+          <div>{children}</div>
+        </motion.div>
+      </motion.div>
+    )}
+  </AnimatePresence>
+);
 
 export default function DonationPage() {
     const [showOnlineMessage, setShowOnlineMessage] = useState(false);
-    
+    const [showOnlineModal, setShowOnlineModal] = useState(false);
+    const [showMonthlyModal, setShowMonthlyModal] = useState(false);
+    const [showInKindModal, setShowInKindModal] = useState(false);
+    const [showCorporateModal, setShowCorporateModal] = useState(false);
+
+
     // Simulate navigation/payment start
     const handleOnlinePaymentClick = () => {
         setShowOnlineMessage(true);
@@ -218,11 +262,11 @@ export default function DonationPage() {
                 
                 {/* Primary CTA (Placeholder for Online Payment Gateway) */}
                 <CustomButton 
-                    onClick={handleOnlinePaymentClick}
-                    style={{ backgroundColor: ACCENT_YELLOW, color: PRIMARY_BLUE }} 
-                    className="w-full justify-center text-xl mb-6 shadow-xl"
+                  onClick={() => setShowOnlineModal(true)}
+                  style={{ backgroundColor: ACCENT_YELLOW, color: PRIMARY_BLUE }} 
+                  className="w-full justify-center text-xl mb-6 shadow-xl"
                 >
-                    Pay Online Now (International Cards/EFT)
+                  Pay Online Now (International Cards/EFT)
                 </CustomButton>
                 
                 <h4 className="text-xl font-bold mt-8 mb-4 text-[#2d2f55]">M-Pesa Donations (Kenya)</h4>
@@ -249,11 +293,13 @@ export default function DonationPage() {
                     Become a dedicated monthly donor and provide reliable, continued support for our ongoing expenses like tuition and food.
                 </p>
                 <CustomButton 
-                    style={{ backgroundColor: 'rgb(220, 38, 38)', color: 'white' }}
-                    className="w-full justify-center text-lg"
+                  onClick={() => setShowMonthlyModal(true)}
+                  style={{ backgroundColor: 'rgb(220, 38, 38)', color: 'white' }}
+                  className="w-full justify-center text-lg"
                 >
-                    Set Up Monthly Gift
+                  Set Up Monthly Gift
                 </CustomButton>
+
             </div>
 
             {/* In-Kind Donations (Clothes) */}
@@ -270,14 +316,14 @@ export default function DonationPage() {
                     <p><strong>Email:</strong> info@shapingfutures.or.ke</p>
                     <p><strong>Drop-off Location:</strong> Piedmont Plaza, Opp. Kenya Science, Off Ngong Road</p>
                 </div>
-                <CustomLink href="/contact" className="block mt-6">
-                    <CustomButton 
-                        style={{ border: '2px solid rgb(34, 197, 94)', color: 'rgb(20, 150, 60)', backgroundColor: 'transparent' }}
-                        className="w-full justify-center hover:bg-green-50 py-3 font-semibold"
-                    >
-                        Arrange a Drop-off
-                    </CustomButton>
-                </CustomLink>
+                <CustomButton 
+                  onClick={() => setShowInKindModal(true)}
+                  style={{ border: '2px solid rgb(34, 197, 94)', color: 'rgb(20, 150, 60)', backgroundColor: 'transparent' }}
+                  className="w-full justify-center hover:bg-green-50 py-3 font-semibold"
+                >
+                  Arrange a Drop-off
+                </CustomButton>
+
             </div>
         </div>
       </section>
@@ -293,15 +339,86 @@ export default function DonationPage() {
         <p className="max-w-xl mx-auto mb-6 text-base" style={{ color: PRIMARY_BLUE }}>
           If you are a business interested in corporate giving or sponsorship, please visit our dedicated contact channel.
         </p>
+        <CustomButton
+          onClick={() => setShowCorporateModal(true)}
+          style={{ backgroundColor: PRIMARY_BLUE, color: 'white' }}
+          className="w-full max-w-sm justify-center text-lg rounded-full shadow-lg"
+        >
+          Become a Corporate Partner
+        </CustomButton>
+
+      </section>
+      {/* Online Donation Modal */}
+      <Modal
+        show={showOnlineModal}
+        onClose={() => setShowOnlineModal(false)}
+        title="Online Donation"
+      >
+        <p className="text-gray-700 mb-4">
+          You’ll be redirected to our secure payment gateway where you can donate using international debit/credit cards or bank transfer.
+        </p>
+        <CustomButton
+          onClick={handleOnlinePaymentClick}
+          style={{ backgroundColor: ACCENT_YELLOW, color: PRIMARY_BLUE }}
+          className="w-full"
+        >
+          Proceed to Payment
+        </CustomButton>
+      </Modal>
+
+      {/* Monthly Donation Modal */}
+      <Modal
+        show={showMonthlyModal}
+        onClose={() => setShowMonthlyModal(false)}
+        title="Set Up Monthly Gift"
+      >
+        <p className="text-gray-700 mb-4">
+          To become a recurring donor, we’ll help you set up an automatic monthly contribution. Please contact us to complete your setup.
+        </p>
+        <CopyDetail label="Email" value="info@shapingfutures.or.ke" />
+        <CopyDetail label="Phone" value="+254 757 050 679" />
+      </Modal>
+
+      {/* In-Kind Donation Modal */}
+      <Modal
+        show={showInKindModal}
+        onClose={() => setShowInKindModal(false)}
+        title="Arrange a Drop-off"
+      >
+        <p className="text-gray-700 mb-4">
+          Thank you for supporting our clothing and supplies drive! Please use the following details to schedule your drop-off:
+        </p>
+        <CopyDetail label="Location" value="Piedmont Plaza, Opp. Kenya Science, Off Ngong Road" />
+        <CopyDetail label="Contact" value="+254 757 050 679" />
+        <CopyDetail label="Email" value="info@shapingfutures.or.ke" />
+      </Modal>
+      {/* Corporate Partnership Modal */}
+      <Modal
+        show={showCorporateModal}
+        onClose={() => setShowCorporateModal(false)}
+        title="Become a Corporate Partner"
+      >
+        <p className="text-gray-700 mb-4">
+          We collaborate with companies and organizations to create lasting impact through sponsorships, mentorship programs, and CSR-driven events.
+        </p>
+        <div className="bg-gray-50 p-4 rounded-lg mb-4">
+          <CopyDetail label="Email" value="info@shapingfutures.or.ke" />
+          <CopyDetail label="Phone" value="+254 757 050 679" />
+        </div>
+        <p className="text-gray-600 mb-4">
+          Let’s discuss how your organization can make a difference while aligning with your CSR goals. Reach out to us today.
+        </p>
         <CustomLink href="/contact">
-          <CustomButton 
-            style={{ backgroundColor: PRIMARY_BLUE, color: 'white' }} 
-            className="w-full max-w-sm justify-center text-lg rounded-full shadow-lg"
+          <CustomButton
+            style={{ backgroundColor: ACCENT_YELLOW, color: PRIMARY_BLUE }}
+            className="w-full"
           >
-            Become a Corporate Partner
+            Contact Our Partnership Team
           </CustomButton>
         </CustomLink>
-      </section>
+      </Modal>
+
+
     </main>
   );
 }

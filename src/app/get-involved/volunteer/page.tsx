@@ -76,25 +76,34 @@ export default function VolunteerPage() {
   const [isSuccess, setIsSuccess] = useState(false);
 
   // Placeholder for form submission logic
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    
-    // Simulate API call delay
-    setTimeout(() => {
-        setIsSubmitting(false);
-        // In a real app, you would validate and send data here.
-        setIsSuccess(true); 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+  setIsSubmitting(true);
+  setIsSuccess(false);
 
-        // Auto-hide success message after 5 seconds
-        setTimeout(() => {
-            setIsSuccess(false);
-        }, 5000);
-        
-        // Clear form
-        (e.target as HTMLFormElement).reset(); 
-    }, 1500);
-  };
+  try {
+    // Send the form data directly to FormSubmit in the background
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    await fetch("https://formsubmit.co/info@shapingfutures.or.ke", {
+      method: "POST",
+      body: formData,
+    });
+
+    setIsSubmitting(false);
+    setIsSuccess(true);
+
+    // Clear form after success
+    form.reset();
+
+    // Hide success message after 5 seconds
+    setTimeout(() => setIsSuccess(false), 5000);
+  } catch (error) {
+    console.error("Form submission failed:", error);
+    setIsSubmitting(false);
+  }
+};
     
   return (
     <main className="bg-[#f8f9fb] text-gray-800 font-inter">
@@ -103,25 +112,35 @@ export default function VolunteerPage() {
       <AnimatePresence>
         {isSuccess && (
           <motion.div
-            initial={{ y: -100, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -100, opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="fixed top-0 left-0 right-0 z-50 p-4"
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 50 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            className="fixed inset-0 flex items-center justify-center z-50 p-4 bg-black/30 backdrop-blur-sm"
           >
-            <div className="max-w-md mx-auto bg-green-500 text-white p-4 rounded-xl shadow-2xl flex items-center gap-3">
-              <CheckCircle className="w-6 h-6" />
-              <div>
-                <h4 className="font-bold">Application Successful!</h4>
-                <p className="text-sm">Thank you! We will be in touch within 7 days.</p>
+            <motion.div
+              initial={{ scale: 0.95 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.95 }}
+              transition={{ duration: 0.3 }}
+              className="max-w-md mx-auto bg-green-500 text-white p-6 rounded-2xl shadow-2xl flex items-start gap-3"
+            >
+              <CheckCircle className="w-7 h-7 mt-1 flex-shrink-0" />
+              <div className="flex-1">
+                <h4 className="font-bold text-lg mb-1">Application Successful!</h4>
+                <p className="text-sm opacity-90">Thank you! We’ll be in touch within 2 days.</p>
               </div>
-              <button onClick={() => setIsSuccess(false)} className="ml-auto p-1 rounded-full hover:bg-green-600">
+              <button
+                onClick={() => setIsSuccess(false)}
+                className="ml-2 text-xl leading-none p-1 rounded-full hover:bg-green-600 transition"
+              >
                 &times;
               </button>
-            </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
+
 
       {/* 1. HERO SECTION */}
       <section className="relative bg-gradient-to-b from-[#2d2f55] to-[#1f2041] text-white pt-32 pb-20 px-6 text-center">
@@ -227,19 +246,19 @@ export default function VolunteerPage() {
             Please fill out the details below. Our Welfare Team will review your application.
           </p>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} method="POST" action={'https://formsubmit.co/info@shapingfutures.or.ke'} className="space-y-6">
             
             {/* Full Name & Email */}
             <div className="grid md:grid-cols-2 gap-6">
                 <div>
                     <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">Full Name *</label>
-                    <input type="text" id="name" name="name" required 
+                    <input type="text" id="name" name="Name" required 
                       className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#f2e63d] focus:border-[#f2e63d]"
                     />
                 </div>
                 <div>
                     <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email *</label>
-                    <input type="email" id="email" name="email" required 
+                    <input type="email" id="email" name="Email" required 
                       className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#f2e63d] focus:border-[#f2e63d]"
                     />
                 </div>
@@ -249,13 +268,13 @@ export default function VolunteerPage() {
             <div className="grid md:grid-cols-2 gap-6">
                 <div>
                     <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">Phone Number *</label>
-                    <input type="tel" id="phone" name="phone" required 
+                    <input type="tel" id="phone" name="Phone" required 
                       className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#f2e63d] focus:border-[#f2e63d]"
                     />
                 </div>
                 <div>
                   <label htmlFor="interest" className="block text-sm font-medium text-gray-700 mb-1">Area of Interest *</label>
-                  <select id="interest" name="interest" required
+                  <select id="interest" name="Interest" required
                     className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#f2e63d] focus:border-[#f2e63d] bg-white"
                   >
                     <option value="">-- Select --</option>
@@ -271,7 +290,7 @@ export default function VolunteerPage() {
             {/* Availability */}
             <div>
               <label htmlFor="availability" className="block text-sm font-medium text-gray-700 mb-1">Preferred Availability *</label>
-              <select id="availability" name="availability" required
+              <select id="availability" name="Availability" required
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#f2e63d] focus:border-[#f2e63d] bg-white"
               >
                 <option value="">-- Select --</option>
@@ -285,7 +304,7 @@ export default function VolunteerPage() {
             {/* Message */}
             <div>
               <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">Tell us about yourself and why you want to volunteer (Optional)</label>
-              <textarea id="message" name="message" rows={4}
+              <textarea id="message" name="Message" rows={4}
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#f2e63d] focus:border-[#f2e63d]"
               ></textarea>
             </div>

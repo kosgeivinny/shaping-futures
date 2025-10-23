@@ -45,19 +45,31 @@ export default function ContactPage() {
   };
 
   // Custom handler for form submission (simulated since no backend here)
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setIsSubmitted(false);
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+  setIsSubmitting(true);
+  setIsSubmitted(false);
 
-    // Simulate API call delay
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setIsSubmitted(true);
-      // Clear form data after successful submission
-      setFormData({ name: "", email: "", message: "" });
-    }, 1500);
-  };
+  try {
+    const formDataObj = new FormData(e.currentTarget);
+
+    // Send the form data silently to FormSubmit
+    await fetch("https://formsubmit.co/ajax/info@shapingfutures.or.ke", {
+      method: "POST",
+      body: formDataObj,
+    });
+
+    // On success
+    setIsSubmitted(true);
+    setFormData({ name: "", email: "", message: "" });
+  } catch (error) {
+    console.error("Error submitting form:", error);
+    alert("Something went wrong. Please try again.");
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
 
   return (
     <main className="bg-[#f8f9fb] text-gray-800">
@@ -143,7 +155,7 @@ export default function ContactPage() {
 
             {isSubmitted && <SuccessMessage />}
 
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} method="POST" action={'https://formsubmit.co/info@shapingfutures.or.ke'} className="space-y-6">
               
               {/* Name and Email */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -152,6 +164,7 @@ export default function ContactPage() {
                   <input
                     type="text"
                     id="name"
+                    name="Name"
                     required
                     value={formData.name}
                     onChange={handleChange}
@@ -164,6 +177,7 @@ export default function ContactPage() {
                   <input
                     type="email"
                     id="email"
+                    name="Email"
                     required
                     value={formData.email}
                     onChange={handleChange}
@@ -179,6 +193,7 @@ export default function ContactPage() {
                 <textarea
                   id="message"
                   rows={5}
+                  name="Message"
                   required
                   value={formData.message}
                   onChange={handleChange}
